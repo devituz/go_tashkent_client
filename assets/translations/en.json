@@ -1,0 +1,145 @@
+{
+    "Категории": "Categories",
+
+    "Главная": "Home",
+    "Галерея": "Gallery",
+    "Добавить": "Add",
+    "Новости": "News",
+    "Еще": "More",
+    "Информация": "info",
+
+    "Выберите тип организации": "Choose the type of organization",
+    "Добавить организацию": "Add organization",
+
+    "Настройки": "Settings",
+    "Push-уведомление": "Push-notification",
+    "Избранные": "Favorites",
+    "О приложении": "About the application",
+    "Политика конфиденциальности": "Privacy Policy",
+    "Свяжитесь с нами": "Contact us",
+    "Оценить приложение": "Rate the app",
+    "Поделиться": "Share",
+    "Изменить язык": "Change the language",
+
+    "Название организации": "Name of the organization",
+    "Адрес организации": "Organization address",
+    "Описание": "Description",
+    "Номер телефона": "Phone number",
+    "Веб-сайт": "Web-site",
+    "Электронная почта": "E-mail",
+    "Facebook": "Facebook",
+    "Инстаграм": "Instagram",
+    "Телеграм @username": "Telegram @username",
+    "Продолжить": "Proceed",
+    "Добавить обложку": "Add cover",
+    "Логотип компании": "Company logo",
+    "Позвонить": "Call",
+    "Показать на карте": "To show on the map",
+
+    "Поиск": "Search",
+    "Местоположение": "Location",
+    "Успешно добавлена.\nЖдите ответа модераторов.": "Successfully added.\nWaiting for moderator response.",
+    "На главную": "Home",
+
+
+    "Avtobox info" : "Avtobox is a reliable assistant for the driver. No more guessing! With the help of the application, you can easily find the nearest Gas Station. AvtoBox will show you the exact location using a map and measure the distance.\n\nFor your convenience, we have collected everything in one application\n- Car Services\n- Car Washes\n- Car dealerships\n- Car rental\n- Car-tuning\n- Car parts\n- Driving schools\n- Auto insurance\n\nContacts, addresses, work schedule are always at hand.",
+    
+    "Тема приложения" : "App theme",
+    "Светлая" : "Light",
+    "Темная" : "Dark",
+
+    "Контакты" : "Contacts",
+    "Закрыть" : "Close",
+
+    "Автозаправки" : "Gas stations",
+    "Электро-\nзаправки" : "Electric-\nfilling",
+    "Бензо-\nзаправки" : "Gasoline-\nrefill",
+    "Метан\nзаправки" : "Methane\nfilling",
+    "Пропан\nзаправки" : "Propane\nfilling",
+
+    "Электрозаправки" : "Electric filling",
+    "Бензозаправки" : "Gasoline refill",
+    "Метан заправки" : "Methane filling",
+    "Пропан заправки" : "Propane filling",
+
+    "Автосервисы" : "Car services",
+    "Автомойки" : "Car washes",
+    "Автосалоны" : "Car dealerships",
+    "Автоаренда" : "Car rental",
+    "Автотюнинг" : "Car tuning",
+    "Автозапчасти" : "Car parts",
+    "Автошколы" : "Driving schools",
+    "Автостраховка" : "Car insurance",
+
+    "Автоблогеры" : "Car bloggers",
+    "По поводу сотрудничество" : "About cooperation",
+    "Здесь будеть много контента" : "There will be a lot of content here",
+    "Правила дорожного движения" : "Traffic laws",
+    "ПДД" : "TL",
+    "График работы" : "Work schedule",
+
+    "Дорожные знаки" : "Road signs",
+    "Дорожная разметка" : "Road markings",
+    "Штрафы" : "Fines",
+
+    "На этапе разработки" : "At the development stage",
+    "Скоро здесь будет много полезного" : "Lots of good stuff coming soon",
+
+    "Основные правила" : "Basic Rules",
+    "Пункты" : "Items",
+    "Общие обязанности водителей" : "General duties of drivers",
+    "Обязанности водителя при дорожно-транспортном происшествии" : "Responsibilities of a driver in a traffic accident",
+    "Обязанности пешеходов" : "Responsibilities of Pedestrians",
+    "Обязанности пассажиров" : "Obligations of Passengers",
+    "Приоритет спецтехники" : "Special equipment privileges",
+    "Сигналы светофора и регулировщика" : "Traffic lights and traffic controller",
+    "Предупреждающие и аварийные знаки" : "Warning and emergency signs",
+    "Начать движение, маневрировать" : "Start moving, maneuver",
+    "Расположение транспортных средств на проезжей части" : "Location of vehicles on the roadway",
+    "Скорость передвижения" : "Movement speed",
+    "Обгон" : "Overtaking",
+    "Остановка и стоянка" : "Stop and parking",
+    "Движение на перекрестках" : "Traffic at intersections",
+    "Регулируемые перекрестки" : "Regulated intersections",
+    "Нерегулируемые перекрестки" : "Unregulated intersections",
+    "Пешеходные переходы и остановки транспортных средств" : "Pedestrian crossings and vehicle stops",
+    "Движение через железнодорожные переезды" : "Movement through railroad crossings",
+    "Движение по автомагистралям" : "Motorway traffic",
+    "Движение в жилых зонах" : "Traffic in residential areas",
+    "Движение на крутых спусках и подъемах" : "Driving on steep descents and ascents",
+    "Приоритет маршрутных средств" : "Preferred routes",
+    "Использование внешних осветительных приборов" : "Using External Lights",
+    "Буксировка механических транспортных средств" : "Towing of motor vehicles",
+    "Обучение вождению транспортных средств" : "Vehicle driving training",
+    "Перевозка людей" : "Transportation of people",
+    "Перевозка грузов" : "Cargo transportation",
+    "Дополнительные требования к передвижению велосипедов, мопедов и телег, а также прогону животных" : "Additional requirements for the movement of bicycles, mopeds and carts, as well as the passage of animals",
+    "Обязанности должностных лиц и граждан по обеспечению безопасности дорожного движения, выпуску на линию транспортных средств, установка на них номерных и опознавательных знаков" : "Obligations of officials and citizens to ensure road safety, release of vehicles on the line, installation of license plates and identification marks on them",
+
+
+
+    "Предупреждающие знаки" : "Warning signs",
+    "Знаки приоритета" : "Priority signs",
+    "Запрещающие знаки" : "Prohibition signs",
+    "Предписывающие знаки" : "Mandatory signs",
+    "Информационно-указательные знаки" : "Information and indication signs",
+    "Знаки сервиса" : "Service marks",
+    "Знаки дополнительной информации" : "Additional Information Signs",
+    "Транспортные светофоры" : "Traffic lights",
+    "Пешеходные светофоры" : "Pedestrian traffic lights"
+
+
+ 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    }
