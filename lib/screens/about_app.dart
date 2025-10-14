@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'settings.dart';
 
 class AboutApp extends StatefulWidget {
-  const AboutApp({
-    Key? key,
-  }) : super(key: key);
+  const AboutApp({Key? key}) : super(key: key);
 
   @override
   State<AboutApp> createState() => _AboutAppState();
@@ -18,66 +16,65 @@ class _AboutAppState extends State<AboutApp> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: currentindex == 0
+          ? const Color(0xFFF2F4F5)
+          : const Color(0xFF33263C),
+      appBar: AppBar(
         backgroundColor: currentindex == 0
-            ? const Color(0xFFF2F4F5)
-            : const Color(0xFF33263C),
-        appBar: AppBar(
-          backgroundColor:
-              currentindex == 0 ? Colors.white : const Color(0xFF43324D),
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(
-              width: 0.3,
-              color: Colors.black38,
-            ))),
-          ),
-          title: Text(
-            "О приложение".tr(),
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: currentindex == 0 ? Colors.black : Colors.white,
-            ),
-          ),
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(
-              Icons.arrow_back_rounded,
-              color: currentindex == 0 ? Colors.black : Colors.white,
+            ? Colors.white
+            : const Color(0xFF43324D),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(width: 0.3, color: Colors.black38),
             ),
           ),
         ),
-        body: Container(
-          padding: const EdgeInsets.all(12),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: size.width / 2,
-                  width: size.width,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.asset(
-                      'assets/images/banner 5.png',
-                      fit: BoxFit.fill,
-                    ),
+        title: Text(
+          "О приложение".tr(),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+            color: currentindex == 0 ? Colors.black : Colors.white,
+          ),
+        ),
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.arrow_back_rounded,
+            color: currentindex == 0 ? Colors.black : Colors.white,
+          ),
+        ),
+      ),
+      body: Container(
+        padding: const EdgeInsets.all(12),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: size.width / 2,
+                width: size.width,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(
+                    'assets/images/banner 5.png',
+                    fit: BoxFit.fill,
                   ),
                 ),
-                SizedBox(
-                  height: size.width / 25,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: dropdownValue == 1
-                      ? Text('''
+              ),
+              SizedBox(height: size.width / 25),
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: dropdownValue == 1
+                    ? Text(
+                        '''
 Наше приложение — это ваш надежный помощник в поездках и поиске нужных мест в Ташкенте и его окрестностях.
 
 Возможности приложения:
@@ -100,13 +97,16 @@ class _AboutAppState extends State<AboutApp> {
 С нашим приложением вы можете не только организовать поездку между Ташкентом и Бекабадом, но и легко находить любые заведения, которые сделают ваше пребывание в Ташкенте комфортным и насыщенным.
 
 Скачайте наше приложение уже сегодня и откройте для себя удобство и скорость во всем!'''
-                          .tr(), style: TextStyle(
-                            fontSize: 14,
-                            color:
-                                currentindex == 0 ? Colors.black : Colors.white,
-                          ),)
-                      : Text(
-                          '''
+                            .tr(),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: currentindex == 0
+                              ? Colors.black
+                              : Colors.white,
+                        ),
+                      )
+                    : Text(
+                        '''
 Bizning ilovamiz Toshkent va uning atrofida sayohat qilish va kerakli joylarni topishda ishonchli yordamchingizdir.
 
 Ilova xususiyatlari:
@@ -129,17 +129,19 @@ Tez ro'yxatdan o'tish va sevimli joylarni saqlash imkoniyati.
 Bizning ilovamiz orqali siz nafaqat Toshkent va Bekobod oʻrtasida sayohat tashkil qilishingiz, balki Toshkentda boʻlishingizni qulay va koʻngilochar qilish imkonini beradigan istalgan muassasalarni osongina topishingiz mumkin.
 
 Bugun bizning ilovamizni yuklab oling va hamma narsada qulaylik va tezlikni toping!'''
-                              .tr(),
-                          style: TextStyle(
-                            fontSize: 14,
-                            color:
-                                currentindex == 0 ? Colors.black : Colors.white,
-                          ),
+                            .tr(),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: currentindex == 0
+                              ? Colors.black
+                              : Colors.white,
                         ),
-                ),
-              ],
-            ),
+                      ),
+              ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

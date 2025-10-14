@@ -1,5 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_tashkent_client/bloc/login/login_bloc.dart';
+import 'package:go_tashkent_client/bloc/otp/otp_bloc.dart';
+import 'package:go_tashkent_client/bloc/register/register_bloc.dart';
 import 'package:go_tashkent_client/onboards/onboard.second.dart';
 import 'package:go_tashkent_client/onboards/onboard_first.dart';
 import 'package:go_tashkent_client/onboards/onboard_thrid.dart';
@@ -27,6 +31,8 @@ import 'screens/zakaz/zakaz_pustoy.dart';
 
 const indexKey = "ChangeIndexKey";
 const indexKey2 = "ChangeIndexKey2";
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+late final String appVersion;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,7 +49,14 @@ Future<void> main() async {
       fallbackLocale: const Locale('ru'),
       startLocale: const Locale('ru'),
       assetLoader: const CodegenLoader(),
-      child: const MyApp(),
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (_) => LoginBloc()),
+            BlocProvider(create: (_) => OtpBloc()),
+            BlocProvider(create: (_) => RegisterBloc()),
+          ],
+          child: const MyApp(),
+        )
     ),
   );
 }

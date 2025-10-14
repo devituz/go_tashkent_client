@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_tashkent_client/screens/home_page.dart';
+import 'package:go_tashkent_client/screens/login/page/login.dart';
+import 'package:go_tashkent_client/services/token_storage.dart';
 
 import 'nav_bar.dart';
 import 'settings.dart';
@@ -21,6 +23,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
+
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
@@ -30,6 +33,28 @@ class _SplashScreenState extends State<SplashScreen>
       curve: Curves.easeIn,
     );
     _controller.forward();
+
+    // Asinxron ishni boshqa methodga ajratamiz
+    _navigateAfterDelay();
+  }
+
+  Future<void> _navigateAfterDelay() async {
+    await Future.delayed(const Duration(seconds: 3));
+
+    bool isLoggedIn = await TokenStorage.hasToken();
+
+    if (!mounted) return;
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => isLoggedIn
+            ? const NavBar()
+            : const LoginPage(),
+      ),
+          (Route<dynamic> route) => false,
+    );
+
   }
 
   @override
@@ -41,11 +66,6 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    Future.delayed(const Duration(seconds: 2)).then((value) =>
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (_) => const NavBar()),
-            (route) => false));
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:intl/intl.dart';
+
 import '../../widgets/zakaz taxi/time_picker.dart';
 import '../settings.dart';
 
@@ -22,11 +23,19 @@ class _ZakazTaxiState extends State<ZakazTaxi> {
   String toCity = "Ташкент";
   String selectedDate = "Сегодня";
   int numberOfPassengers = 1;
+
   int totalPrice = 80000;
   String totalPriceFormatted = "80 000";
+
   bool isAirConditioningRequired = false;
-  bool isBagajnikRequired = false;
+  bool isBagajnikRequired = false; // ← «Багажник на крыше»
   bool vipmesto = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _updateTotalPrice();
+  }
 
   void _updateFromCity(String? selectedCity) {
     if (selectedCity == null) return;
@@ -53,11 +62,19 @@ class _ZakazTaxiState extends State<ZakazTaxi> {
     if (newDate != null) {
       setState(() {
         selectedDate = newDate;
+        // дата на цену не влияет сейчас, но оставляем для будущего
       });
     }
   }
 
+  /// Пересчёт цены.
+  /// Если включён багажник на крыше — показываем «Цена договорная».
   void _updateTotalPrice() {
+    if (isBagajnikRequired) {
+      totalPriceFormatted = "Цена договорная"; // переведём при показе
+      return;
+    }
+
     if ((fromCity == "Ташкент" && toCity == "Бекабад") ||
         (fromCity == "Бекабад" && toCity == "Ташкент")) {
       totalPrice = 80000 * numberOfPassengers;
@@ -81,6 +98,8 @@ class _ZakazTaxiState extends State<ZakazTaxi> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    final bool negotiable = isBagajnikRequired;
+
     return Scaffold(
       backgroundColor: currentindex == 0
           ? const Color(0xFFF2F4F5)
@@ -196,7 +215,7 @@ class _ZakazTaxiState extends State<ZakazTaxi> {
                   ),
                   const SizedBox(height: 16),
 
-                  // === Новый выбор количества пассажиров 1–4 ===
+                  // Количество пассажиров (1–4)
                   _buildPassengerDropdown(
                     label: "Количество пассажиров".tr(),
                     value: numberOfPassengers,
@@ -218,6 +237,9 @@ class _ZakazTaxiState extends State<ZakazTaxi> {
                           label: "Время подачи машины".tr(),
                           hint: "",
                           icon: LucideIcons.clock,
+                          isTomorrow:
+                              selectedDate == "Завтра", // <-- ключевая строка
+                          // fixedTzOffsetHours: 5, // <-- если нужно считать время по GMT+5 независимо от девайса
                         ),
                       ),
                       const SizedBox(width: 15),
@@ -232,6 +254,8 @@ class _ZakazTaxiState extends State<ZakazTaxi> {
                     ],
                   ),
                   const SizedBox(height: 16),
+
+                  // Переднее место (добавка)
                   CheckboxListTile(
                     value: vipmesto,
                     onChanged: (bool? newValue) {
@@ -252,30 +276,14 @@ class _ZakazTaxiState extends State<ZakazTaxi> {
                     activeColor: const Color(0xFFFF7625),
                     contentPadding: EdgeInsets.zero,
                   ),
-                  // CheckboxListTile(
-                  //   value: isAirConditioningRequired,
-                  //   onChanged: (bool? newValue) {
-                  //     setState(() {
-                  //       isAirConditioningRequired = newValue ?? false;
-                  //     });
-                  //   },
-                  //   title: Text(
-                  //     "Кондиционер".tr(),
-                  //     style: TextStyle(
-                  //       fontSize: 15,
-                  //       color: currentindex == 0 ? Colors.black : Colors.white,
-                  //       fontWeight: FontWeight.w500,
-                  //     ),
-                  //   ),
-                  //   controlAffinity: ListTileControlAffinity.leading,
-                  //   activeColor: const Color(0xFFFF7625),
-                  //   contentPadding: EdgeInsets.zero,
-                  // ),
+
+                  // Багажник на крыше → «Цена договорная»
                   CheckboxListTile(
                     value: isBagajnikRequired,
                     onChanged: (bool? newValue) {
                       setState(() {
                         isBagajnikRequired = newValue ?? false;
+                        _updateTotalPrice(); // пересчёт (меняем на договорную)
                       });
                     },
                     title: Text(
@@ -290,6 +298,7 @@ class _ZakazTaxiState extends State<ZakazTaxi> {
                     activeColor: const Color(0xFFFF7625),
                     contentPadding: EdgeInsets.zero,
                   ),
+
                   const SizedBox(height: 16),
                   _buildInputField(
                     context,
@@ -315,7 +324,9 @@ class _ZakazTaxiState extends State<ZakazTaxi> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  "$totalPriceFormatted сум".tr(),
+                  negotiable
+                      ? "Сумма договорная".tr()
+                      : "${totalPriceFormatted.tr()}" + " сум".tr(),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -353,6 +364,8 @@ class _ZakazTaxiState extends State<ZakazTaxi> {
     );
   }
 
+  // ------- UI helpers -------
+
   Widget _buildDropdownField({
     required String label,
     required String value,
@@ -363,7 +376,7 @@ class _ZakazTaxiState extends State<ZakazTaxi> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label,
+          label.tr(),
           style: TextStyle(
             fontSize: 14,
             color: currentindex == 0 ? Colors.black54 : Colors.white,
@@ -399,7 +412,7 @@ class _ZakazTaxiState extends State<ZakazTaxi> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label,
+          label.tr(),
           style: TextStyle(
             fontSize: 14,
             color: currentindex == 0 ? Colors.black54 : Colors.white,

@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_tashkent_client/services/global_service.dart';
 
 import 'settings.dart';
 
@@ -166,14 +167,22 @@ class _UserDataState extends State<UserData> {
                             SizedBox(
                               width: 5,
                             ),
-                            Text(
-                              "Выйти с аккаунта".tr(),
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: currentindex == 0
-                                    ? Colors.black
-                                    : Colors.white,
-                                fontWeight: FontWeight.bold,
+                            GestureDetector(
+                              onTap: (){
+                                print("object");
+                                globalLogout();
+                              },
+
+
+                              child: Text(
+                                "Выйти с аккаунта".tr(),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: currentindex == 0
+                                      ? Colors.black
+                                      : Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ],

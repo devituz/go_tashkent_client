@@ -2,7 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_tashkent_client/screens/settings.dart';
+
+import '../screens/settings.dart';
 
 class OrderAccept extends StatefulWidget {
   const OrderAccept({
