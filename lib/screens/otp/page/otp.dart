@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter/services.dart';
 import 'package:go_tashkent_client/screens/nav_bar.dart';
 
 import '../../../bloc/login/login_bloc.dart';
@@ -19,7 +19,8 @@ class OtpInputScreen extends StatefulWidget {
 }
 
 class _OtpInputScreenState extends State<OtpInputScreen> {
-  final TextEditingController _otpController = TextEditingController();
+  final List<TextEditingController> _controllers =
+  List.generate(4, (_) => TextEditingController());
   bool _isButtonEnabled = false;
   int _secondsRemaining = 59;
   Timer? _timer;
@@ -27,20 +28,25 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
   @override
   void initState() {
     super.initState();
-    _otpController.addListener(_validateOtp);
+    for (var controller in _controllers) {
+      controller.addListener(_validateOtp);
+    }
     _startCountdown();
   }
 
   @override
   void dispose() {
-    _otpController.removeListener(_validateOtp);
-    _otpController.dispose();
+    for (var controller in _controllers) {
+      controller.removeListener(_validateOtp);
+      controller.dispose();
+    }
     _timer?.cancel();
     super.dispose();
   }
 
   void _validateOtp() {
-    final isValid = _otpController.text.trim().length == 4;
+    final otp = _controllers.map((e) => e.text).join();
+    final isValid = otp.length == 4;
     if (isValid != _isButtonEnabled) {
       setState(() => _isButtonEnabled = isValid);
     }
@@ -59,9 +65,8 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
   }
 
   void _onVerify() {
-    final otp = _otpController.text.trim();
+    final otp = _controllers.map((e) => e.text).join();
     final phone = widget.phoneNumber.replaceAll(RegExp(r'\D'), '');
-
     context.read<OtpBloc>().add(OtpEvent.verifyOtp(phone: phone, code: otp));
   }
 
@@ -118,30 +123,41 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
               ),
               const SizedBox(height: 60),
 
-              // === OTP INPUT ===
-              Center(
-                child: SizedBox(
-                  width: 240,
-                  child: TextField(
-                    controller: _otpController,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(4),
-                    ],
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 24, letterSpacing: 8),
-                    decoration: InputDecoration(
-                      hintText: '••••',
-                      filled: true,
-                      fillColor: Colors.grey.shade200,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
+              // === 4 ta OTP input ===
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(4, (index) {
+                  return SizedBox(
+                    width: 60,
+                    child: TextField(
+                      controller: _controllers[index],
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(1),
+                      ],
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 24),
+                      decoration: InputDecoration(
+                        counterText: '',
+                        filled: true,
+                        fillColor: Colors.grey.shade200,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide.none,
+                        ),
                       ),
+                      onChanged: (value) {
+                        if (value.isNotEmpty && index < 3) {
+                          FocusScope.of(context).nextFocus();
+                        } else if (value.isEmpty && index > 0) {
+                          FocusScope.of(context).previousFocus();
+                        }
+                        _validateOtp();
+                      },
                     ),
-                  ),
-                ),
+                  );
+                }),
               ),
 
               const SizedBox(height: 20),
@@ -151,8 +167,8 @@ class _OtpInputScreenState extends State<OtpInputScreen> {
                 child: _secondsRemaining > 0
                     ? Text(
                   'Отправить код заново: 0:${_secondsRemaining.toString().padLeft(2, '0')}',
-                  style: const TextStyle(
-                      fontSize: 14, color: Colors.grey),
+                  style:
+                  const TextStyle(fontSize: 14, color: Colors.grey),
                 )
                     : TextButton(
                   onPressed: _onResend,

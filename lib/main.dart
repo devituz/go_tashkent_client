@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_tashkent_client/bloc/delete/delete_bloc.dart';
 import 'package:go_tashkent_client/bloc/login/login_bloc.dart';
 import 'package:go_tashkent_client/bloc/otp/otp_bloc.dart';
+import 'package:go_tashkent_client/bloc/profile/profile_bloc.dart';
 import 'package:go_tashkent_client/bloc/register/register_bloc.dart';
 import 'package:go_tashkent_client/onboards/onboard.second.dart';
 import 'package:go_tashkent_client/onboards/onboard_first.dart';
@@ -54,6 +56,8 @@ Future<void> main() async {
             BlocProvider(create: (_) => LoginBloc()),
             BlocProvider(create: (_) => OtpBloc()),
             BlocProvider(create: (_) => RegisterBloc()),
+            BlocProvider(create: (_) => ProfileBloc()),
+            BlocProvider(create: (_) => DeleteBloc()),
           ],
           child: const MyApp(),
         )
@@ -91,6 +95,7 @@ class MyApp extends StatelessWidget {
       // '/about_app': (context) => const AboutApp(),
     };
     return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
