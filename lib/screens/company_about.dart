@@ -209,31 +209,40 @@ class AboutCompany extends StatelessWidget {
                 ],
               ),
             ),
-            ContactUs(
-              onTapfun: () {},
-              icon: 'assets/icons/mail.svg',
-              text: item.pochta.toString(),
-            ),
-            ContactUs(
-              onTapfun: () async {},
-              icon: 'assets/icons/web.svg',
-              text:item.site.toString(),
-            ),
-            ContactUs(
-              onTapfun: () async {},
-              icon: 'assets/icons/facebook.svg',
-              text: item.facebook.toString(),
-            ),
-            ContactUs(
-              onTapfun: () async {},
-              icon: 'assets/icons/instagram.svg',
-              text: item.instagram.toString(),
-            ),
-            ContactUs(
-              onTapfun: () async {},
-              icon: 'assets/icons/telegram.svg',
-              text: item.telegram.toString(),
-            ),
+            if (item.pochta != null && item.pochta!.isNotEmpty)
+              ContactUs(
+                onTapfun: () {},
+                icon: 'assets/icons/mail.svg',
+                text: item.pochta!,
+              ),
+
+            if (item.site != null && item.site!.isNotEmpty)
+              ContactUs(
+                onTapfun: () async {},
+                icon: 'assets/icons/web.svg',
+                text: item.site!,
+              ),
+
+            if (item.facebook != null && item.facebook!.isNotEmpty)
+              ContactUs(
+                onTapfun: () async {},
+                icon: 'assets/icons/facebook.svg',
+                text: item.facebook!,
+              ),
+
+            if (item.instagram != null && item.instagram!.isNotEmpty)
+              ContactUs(
+                onTapfun: () async {},
+                icon: 'assets/icons/instagram.svg',
+                text: item.instagram!,
+              ),
+
+            if (item.telegram != null && item.telegram!.isNotEmpty)
+              ContactUs(
+                onTapfun: () async {},
+                icon: 'assets/icons/telegram.svg',
+                text: item.telegram!,
+              ),
             const SizedBox(
               height: 6,
             ),

@@ -1,7 +1,6 @@
 import 'dart:io' show Platform;
 import 'package:geolocator/geolocator.dart';
 
-/// 🟢 1️⃣ Ruxsatni tekshirish
 Future<bool> checkAndRequestPermission() async {
   LocationPermission permission = await Geolocator.checkPermission();
 
@@ -21,7 +20,6 @@ Future<bool> checkAndRequestPermission() async {
       permission == LocationPermission.whileInUse;
 }
 
-/// 🟢 2️⃣ Faqat bir marta masofa olish funksiyasi
 Future<double> getDistanceOnce({
   required String latitude,
   required String longitude,
@@ -34,18 +32,15 @@ Future<double> getDistanceOnce({
   if (lat == null || lng == null) return 0.0;
 
   try {
-    // 📍 Foydalanuvchining hozirgi joylashuvi
     final pos = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
-
-    // 📏 Masofani hisoblash (km)
     final distance = Geolocator.distanceBetween(
       pos.latitude,
       pos.longitude,
       lat,
       lng,
-    ) / 1000 * 1.1; // 10% aylanma yo‘l
+    ) / 1000 * 1.1;
 
     return double.parse(distance.toStringAsFixed(1));
   } catch (e) {
