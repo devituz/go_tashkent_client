@@ -1,22 +1,20 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:go_tashkent_client/model/Addresses_models.dart';
 import 'package:go_tashkent_client/screens/settings.dart';
+import 'package:go_tashkent_client/utils/distance_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 import '../widgets/contact_uc.dart';
 
-class AboutCompany extends StatefulWidget {
-  const AboutCompany({
-    Key? key,
-  }) : super(key: key);
+class AboutCompany extends StatelessWidget {
+  final Datum item;
 
-  @override
-  State<AboutCompany> createState() => _AboutCompanyState();
-}
+  const AboutCompany({super.key, required this.item});
 
-class _AboutCompanyState extends State<AboutCompany> {
+
   get isFavorite => false;
 
   @override
@@ -31,7 +29,7 @@ class _AboutCompanyState extends State<AboutCompany> {
             currentindex == 0 ? Colors.white : const Color(0xFF43324D),
         elevation: 0,
         title: Text(
-          "Darmonmed",
+          item.name,
           style: TextStyle(
               color: currentindex == 0 ? Colors.black : Colors.white,
               fontSize: 18,
@@ -77,12 +75,28 @@ class _AboutCompanyState extends State<AboutCompany> {
               height: 6,
             ),
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              margin:  EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               height: size.width / 2.1,
               width: size.width,
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.asset('assets/images/banner.png', fit: BoxFit.cover,)),
+              child: CarouselSlider(
+                options: CarouselOptions(
+                  height: size.width / 2.1,
+                  viewportFraction: 1.0,
+                  enableInfiniteScroll: true,
+                  autoPlay: true,
+                ),
+                items: (item.obloshka ?? []).map((url) {
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: CachedNetworkImage(
+                      imageUrl: url,
+                      fit: BoxFit.cover,
+                      errorWidget: (context, url, error) =>
+                      const Icon(Icons.error, color: Colors.red),
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
             Container(
               width: size.width,
@@ -103,7 +117,7 @@ class _AboutCompanyState extends State<AboutCompany> {
                     margin: const EdgeInsets.symmetric(horizontal: 10),
                     width: size.width / 1.3,
                     child: Text(
-                      "Darmon med",
+                      item.name,
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
@@ -135,7 +149,7 @@ class _AboutCompanyState extends State<AboutCompany> {
                         margin: const EdgeInsets.symmetric(horizontal: 12),
                         width: size.width / 1.7,
                         child: Text(
-                          "Ташкент",
+                          item.address.toString(),
                           style: TextStyle(
                             overflow: TextOverflow.fade,
                             fontSize: 14,
@@ -147,16 +161,30 @@ class _AboutCompanyState extends State<AboutCompany> {
                       ),
                     ],
                   ),
-                  Text(
-                    '155 km',
-                    maxLines: 1,
-                    style: const TextStyle(
-                      overflow: TextOverflow.fade,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF2081F9),
+                  FutureBuilder<double>(
+                    future: getDistanceOnce(
+                      latitude: item.latitude.toString(),
+                      longitude: item.longitude.toString(),
                     ),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Text("...");
+                      }
+
+                      final distance = snapshot.data ?? 0.0;
+                      return Text(
+                        "${distance.toStringAsFixed(1)} km",
+                        style: const TextStyle(
+                          overflow: TextOverflow.fade,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF2081F9),
+                        ),
+                      );
+                    },
                   ),
+
+
                 ],
               ),
             ),
@@ -173,7 +201,7 @@ class _AboutCompanyState extends State<AboutCompany> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Совремменная клиника с новим оборудованием",
+                    item.desc.toString(),
                     style: TextStyle(
                         fontSize: 16,
                         color: currentindex == 0 ? Colors.black : Colors.white),
@@ -184,27 +212,27 @@ class _AboutCompanyState extends State<AboutCompany> {
             ContactUs(
               onTapfun: () {},
               icon: 'assets/icons/mail.svg',
-              text: 'darmonmed@gmail.com',
+              text: item.pochta.toString(),
             ),
             ContactUs(
               onTapfun: () async {},
               icon: 'assets/icons/web.svg',
-              text: "www.darmonmed.com",
+              text:item.site.toString(),
             ),
             ContactUs(
               onTapfun: () async {},
               icon: 'assets/icons/facebook.svg',
-              text: 'facebook.com/darmonmed',
+              text: item.facebook.toString(),
             ),
             ContactUs(
               onTapfun: () async {},
               icon: 'assets/icons/instagram.svg',
-              text: 'instagram.com/darmonmed',
+              text: item.instagram.toString(),
             ),
             ContactUs(
               onTapfun: () async {},
               icon: 'assets/icons/telegram.svg',
-              text: "t.me/darmonmed",
+              text: item.telegram.toString(),
             ),
             const SizedBox(
               height: 6,
@@ -228,7 +256,7 @@ class _AboutCompanyState extends State<AboutCompany> {
           children: [
             InkWell(
               onTap: () async {
-                String phone = "+998901317377"
+                String phone = item.telefon.toString()
                     .replaceAll('-', '')
                     .replaceAll(' ', '')
                     .replaceAll('(', '')
@@ -271,25 +299,41 @@ class _AboutCompanyState extends State<AboutCompany> {
               ),
             ),
             InkWell(
-              // onTap: () async {
-              //   final query =
-              //       '${widget.place.placeLat},${widget.place.placeAlt},${widget.place.placeTitle})';
-              //   final uri = Uri(
-              //       scheme: 'geo', host: '0,0', queryParameters: {'q': query});
-              //   await launchUrlString(uri.toString(),
-              //       mode: LaunchMode.externalApplication);
-              // },
-
               onTap: () async {
-                final query = '';
-                final fallbackUrl = Uri(
-                  scheme: 'https',
-                  host: 'www.google.com',
-                  path: '/maps/search/',
-                  queryParameters: {'api': '1', 'query': query},
-                ).toString();
-                // ignore: deprecated_member_use
-                await launch(fallbackUrl);
+                final double? lat = double.tryParse(item.latitude.toString());
+                final double? lng = double.tryParse(item.longitude.toString());
+                final String name = item.name ?? '';
+
+                if (lat == null || lng == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Manzil koordinatalari mavjud emas')),
+                  );
+                  return;
+                }
+
+                // 🗺 Google Maps uchun URL yaratamiz
+                final Uri googleMapsUri = Uri.parse(
+                  'https://www.google.com/maps/search/?api=1&query=$lat,$lng($name)',
+                );
+
+                // 🔹 Google Maps ilovasini ochishga urinish
+                final Uri nativeUri = Uri(
+                  scheme: 'geo',
+                  host: '0,0',
+                  queryParameters: {'q': '$lat,$lng($name)'},
+                );
+
+                try {
+                  if (await canLaunchUrl(nativeUri)) {
+                    await launchUrl(nativeUri, mode: LaunchMode.externalApplication);
+                  } else {
+                    await launchUrl(googleMapsUri, mode: LaunchMode.externalApplication);
+                  }
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Google Map ni ochib bo‘lmadi: $e')),
+                  );
+                }
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -302,21 +346,17 @@ class _AboutCompanyState extends State<AboutCompany> {
                 ),
                 child: Row(
                   children: [
-                    const Icon(
-                      Icons.location_on_sharp,
-                      color: Colors.white,
-                    ),
-                    SizedBox(
-                      width: size.width / 60,
-                    ),
+                    const Icon(Icons.location_on_sharp, color: Colors.white),
+                    SizedBox(width: size.width / 60),
                     Expanded(
                       child: Text(
                         'Показать на карте'.tr(),
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white),
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ],

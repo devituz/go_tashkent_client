@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_tashkent_client/bloc/delete/delete_bloc.dart';
 import 'package:go_tashkent_client/bloc/login/login_bloc.dart';
+import 'package:go_tashkent_client/bloc/news/news_bloc.dart';
 import 'package:go_tashkent_client/bloc/otp/otp_bloc.dart';
 import 'package:go_tashkent_client/bloc/profile/profile_bloc.dart';
 import 'package:go_tashkent_client/bloc/register/register_bloc.dart';
@@ -25,6 +26,7 @@ import 'package:go_tashkent_client/screens/zakaz/zakaz_pochta_melkiy.dart';
 import 'package:go_tashkent_client/screens/zakaz/zakaz_taksi.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'bloc/addresses/addresses_bloc.dart';
 import 'generated/codegen_loader.g.dart';
 import 'screens/home_page.dart';
 import 'screens/settings.dart';
@@ -58,6 +60,8 @@ Future<void> main() async {
             BlocProvider(create: (_) => RegisterBloc()),
             BlocProvider(create: (_) => ProfileBloc()),
             BlocProvider(create: (_) => DeleteBloc()),
+            BlocProvider(create: (_) => NewsBloc()),
+            BlocProvider(create: (_) => AddressesBloc()),
           ],
           child: const MyApp(),
         )
@@ -79,7 +83,7 @@ class MyApp extends StatelessWidget {
       '/hotels': (context) => const Hotels(),
       '/edu': (context) => const EduPage(),
       '/about_app': (context) => const AboutApp(),
-      '/about_company': (context) => const AboutCompany(),
+      // '/about_company': (context) => const AboutCompany(),
       '/user_data': (context) => const UserData(),
       '/zakaz_taxi': (context) => const ZakazTaxi(),
       '/zakaz_pochta_melkiy': (context) => const ZakazPochtaMelkiy(),

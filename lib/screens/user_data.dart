@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_tashkent_client/bloc/delete/delete_bloc.dart';
@@ -61,7 +62,11 @@ class _UserDataState extends State<UserData> {
         builder: (context, state) {
           return state.when(
             initial: () => const Center(child: CircularProgressIndicator()),
-            loading: () => const SizedBox.shrink(),
+            loading: () => Center(
+              child: const CupertinoActivityIndicator(
+                radius: 14,
+              ),
+            ),
             failure: (e) => const SizedBox.shrink(),
             success: (user) {
               return Container(
@@ -225,7 +230,7 @@ class _UserDataState extends State<UserData> {
                                     Text(
                                       "Удалить аккаунт".tr(),
                                       style: const TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 12,
                                         color: Colors.red,
                                         fontWeight: FontWeight.bold,
                                       ),

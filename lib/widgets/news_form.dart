@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import '../screens/settings.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class NewsForm extends StatelessWidget {
   const NewsForm({
@@ -44,13 +45,18 @@ class NewsForm extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Text(
-                text,
-                style: TextStyle(
-                  fontFamily: 'PFDinDisplay',
-                  fontSize: 16,
-                  color: currentindex == 0 ? Colors.black : Colors.white,
-                ),
+              child: Html(
+                data: text,
+                style: {
+                  "*": Style(
+                    fontFamily: 'PFDinDisplay',
+                    fontSize: FontSize(16),
+                    color: currentindex == 0 ? Colors.black : Colors.white,
+                  ),
+                  "strong": Style(fontWeight: FontWeight.bold),
+                  "em": Style(fontStyle: FontStyle.italic),
+                  "a": Style(color: Colors.blue),
+                },
               ),
             ),
             InkWell(

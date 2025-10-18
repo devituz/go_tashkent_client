@@ -40,6 +40,7 @@ dependencies:
   flutter_image_slideshow: ^0.1.6
   url_launcher: ^6.3.1
   marquee: ^2.2.3
+  flutter_html: ^3.0.0
   cached_network_image: ^3.1.0
   lucide_icons: ^0.257.0
   flutter_animate: ^4.5.2
@@ -60,6 +61,7 @@ dependencies:
   flutter_bloc: ^8.1.6
   freezed: ^2.5.7
   firebase_core: ^4.1.0
+  carousel_slider: ^5.1.1
   firebase_messaging: ^16.0.1
   encrypt: ^5.0.3
   collection: ^1.19.1

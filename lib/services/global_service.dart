@@ -153,6 +153,10 @@ Future<void> globalLogout() async {
 
 String get currentLang {
   final ctx = navigatorKey.currentContext;
-  if (ctx == null) return 'ru'; // fallback til
+  if (ctx == null) {
+    // fallback til — agar kontekst yo‘q bo‘lsa, 'ru' qaytaradi
+    return 'ru';
+  }
+  // easy_localization orqali hozirgi tanlangan tilni olish
   return EasyLocalization.of(ctx)!.locale.languageCode;
 }

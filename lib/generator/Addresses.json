@@ -1,0 +1,28 @@
+{
+  "status": "success",
+  "data": [
+    {
+      "id": 1,
+      "category_id": 1,
+      "name": "Название (рус)*",
+      "desc": "<p><br><strong><em>Описание (рус)</em></strong></p><p><br><br><br><br><br><br></p><p><br><br><br></p><p><br><br><br></p><p><br><br></p><p><br></p>",
+      "address": "Адрес (рус)",
+      "logo": "https://gotoshkent.uz/storage/logo/01K7VY8YC4BBF238QQ7GX8YG7D.jpg",
+      "obloshka": [
+        "https://gotoshkent.uz/storage/obloshka/01K7VY8YC591PNJMZT5B1CWC0V.jpg",
+        "https://gotoshkent.uz/storage/obloshka/01K7VY8YC591PNJMZT5B1CWC0W.png"
+      ],
+      "top_obloshka": "https://gotoshkent.uz/storage/top_obloshka/01K7VY8YC6MC2KEGX49X8MBMMA.png",
+      "site": "https://gotoshkent.uz/admin/addresses/1/edit",
+      "pochta": "fnrunfr@gmail.com",
+      "facebook": "https://gotoshkent.uz/admin/addresses/1/edit",
+      "instagram": "https://gotoshkent.uz/admin/addresses/1/edit",
+      "telegram": null,
+      "telefon": "+9989527988",
+      "latitude": "41.2838925",
+      "longitude": "69.2013204",
+      "active": true,
+      "created_at": "18-10-2025 20:16:09"
+    }
+  ]
+}

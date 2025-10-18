@@ -131,7 +131,6 @@ class AuthService {
     }
   }
 
-
   Future<void> deleteClientUser({
     String lang = 'ru',
   }) async {
