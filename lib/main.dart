@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_tashkent_client/bloc/delete/delete_bloc.dart';
 import 'package:go_tashkent_client/bloc/login/login_bloc.dart';
 import 'package:go_tashkent_client/bloc/news/news_bloc.dart';
+import 'package:go_tashkent_client/bloc/order_false/order_false_bloc.dart';
+import 'package:go_tashkent_client/bloc/orders/orders_bloc.dart';
 import 'package:go_tashkent_client/bloc/otp/otp_bloc.dart';
 import 'package:go_tashkent_client/bloc/profile/profile_bloc.dart';
 import 'package:go_tashkent_client/bloc/register/register_bloc.dart';
@@ -62,6 +64,8 @@ Future<void> main() async {
             BlocProvider(create: (_) => DeleteBloc()),
             BlocProvider(create: (_) => NewsBloc()),
             BlocProvider(create: (_) => AddressesBloc()),
+            BlocProvider(create: (_) => OrdersBloc()),
+            BlocProvider(create: (_) => OrderFalseBloc()),
           ],
           child: const MyApp(),
         )

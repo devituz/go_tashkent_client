@@ -85,6 +85,7 @@ class _ClinicsState extends State<Clinics> {
                   radius: 14,
                 ),
               ),
+              failure: (error) => SizedBox.shrink(),
 
               success: (data) {
               final addresses = data.data;
@@ -120,8 +121,6 @@ class _ClinicsState extends State<Clinics> {
               );
             },
 
-            /// ❌ Xatolik holati
-            failure: (error) => SizedBox.shrink()
           );
         },
       ),

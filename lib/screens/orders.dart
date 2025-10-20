@@ -1,11 +1,30 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_tashkent_client/bloc/order_false/order_false_bloc.dart';
 
+import '../bloc/orders/orders_bloc.dart';
 import '../widgets/order_card.dart';
 import 'settings.dart';
 
-class Orders extends StatelessWidget {
+class Orders extends StatefulWidget {
   const Orders({super.key});
+
+  @override
+  State<Orders> createState() => _OrdersState();
+}
+
+class _OrdersState extends State<Orders> {
+
+
+  @override
+  void initState() {
+    context.read<OrdersBloc>().add(const OrdersEvent.orders(active: true),);
+    context.read<OrderFalseBloc>().add(const OrderFalseEvent.orders(active: false),);
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,16 +72,74 @@ class Orders extends StatelessWidget {
                 ),
               ),
             ),
-            OrderCard(
-              type: "ТАКСИ",
-              driver: "Азимов Бобур",
-              car: "белый NEXIA 3",
-              licensePlate: "01 Q 363 KJ",
-              date: "18.01.2025, 14:30",
-              from: "Ташкент",
-              to: "Бекабад",
-              price: "70 000",
-            ),
+        BlocBuilder<OrdersBloc, OrdersState>(
+          builder: (context, state) {
+            return state.when(
+              initial: () => const Center(child: Text("⏳ Yuklanmoqda...")),
+              loading: () => Center(
+                child: const CupertinoActivityIndicator(
+                  radius: 14,
+                ),
+              ),
+              failure: (error) => SizedBox.shrink(),
+              success: (orders) {
+                if (orders.data == null || orders.data!.isEmpty) {
+                  return const Center(child: Text("🟡 Aktiv buyurtmalar yo‘q"));
+                }
+
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: orders.data!.length,
+                  itemBuilder: (context, index) {
+                    final order = orders.data![index];
+
+                    // 🔹 Turi (order_type) uchun
+                    String getReadableType(String? type) {
+                      switch (type) {
+                        case 'taxi':
+                          return 'TAXI';
+                        case 'mail':
+                          return 'Pochta';
+                        case 'freight_transport':
+                          return 'Pochta jo‘natmasi';
+                        default:
+                          return 'Noma’lum';
+                      }
+                    }
+
+                    // 🔹 Manzillar uchun (from_wheres_id, where_tos_id)
+                    String getLocationName(int? id) {
+                      switch (id) {
+                        case 1:
+                          return 'Bekobod';
+                        case 2:
+                          return 'Shirin';
+                        case 3:
+                          return 'Toshkent';
+                        default:
+                          return 'Noma’lum joy';
+                      }
+                    }
+
+                    return OrderCard(
+                      type: getReadableType(order.orderType),
+                      driver: order.driverName ?? 'Noma’lum',
+                      car: order.carName ?? '',
+                      licensePlate: order.carNumber ?? '',
+                      date: order.createdAt ?? '',
+                      from: getLocationName(order.fromWheresId),
+                      to: getLocationName(order.whereTosId),
+                      price: "${order.totalPrice ?? 0}",
+                    );
+                  },
+                );
+              },
+            );
+          },
+        ),
+
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
               child: Text(
@@ -74,66 +151,73 @@ class Orders extends StatelessWidget {
                 ),
               ),
             ),
-            OrderCard(
-              type: "ТАКСИ",
-              driver: "Азимов Бобур",
-              car: "белый NEXIA 3",
-              licensePlate: "01 Q 363 KJ",
-              date: "18.01.2025, 14:30",
-              from: "Ташкент",
-              to: "Бекабад",
-              price: "70 000",
+            BlocBuilder<OrderFalseBloc, OrderFalseState>(
+              builder: (context, state) {
+                return state.when(
+                  initial: () => const Center(child: Text("⏳ Yuklanmoqda...")),
+                  loading: () => Center(
+                    child: const CupertinoActivityIndicator(
+                      radius: 14,
+                    ),
+                  ),
+                  failure: (error) => SizedBox.shrink(),
+                  success: (orders) {
+                    if (orders.data == null || orders.data!.isEmpty) {
+                      return const Center(child: Text("🟡 Aktiv buyurtmalar yo‘q"));
+                    }
+
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: orders.data!.length,
+                      itemBuilder: (context, index) {
+                        final order = orders.data![index];
+
+                        // 🔹 Turi (order_type) uchun
+                        String getReadableType(String? type) {
+                          switch (type) {
+                            case 'taxi':
+                              return 'TAXI';
+                            case 'mail':
+                              return 'Pochta';
+                            case 'freight_transport':
+                              return 'Pochta jo‘natmasi';
+                            default:
+                              return 'Noma’lum';
+                          }
+                        }
+
+                        // 🔹 Manzillar uchun (from_wheres_id, where_tos_id)
+                        String getLocationName(int? id) {
+                          switch (id) {
+                            case 1:
+                              return 'Bekobod';
+                            case 2:
+                              return 'Shirin';
+                            case 3:
+                              return 'Toshkent';
+                            default:
+                              return 'Noma’lum joy';
+                          }
+                        }
+
+                        return OrderCard(
+                          type: getReadableType(order.orderType),
+                          driver: order.driverName ?? 'Noma’lum',
+                          car: order.carName ?? '',
+                          licensePlate: order.carNumber ?? '',
+                          date: order.createdAt ?? '',
+                          from: getLocationName(order.fromWheresId),
+                          to: getLocationName(order.whereTosId),
+                          price: "${order.totalPrice ?? 0}",
+                        );
+                      },
+                    );
+                  },
+                );
+              },
             ),
-            OrderCard(
-              type: "ПОЧТОВАЯ ПОСЫЛКА",
-              driver: "Азимов Бобур",
-              car: "белый NEXIA 3",
-              licensePlate: "01 Q 363 KJ",
-              date: "18.01.2025, 14:30",
-              from: "Ташкент",
-              to: "Бекабад",
-              price: "45 000",
-            ),
-            OrderCard(
-              type: "ГРУЗОПЕРЕВОЗКИ",
-              driver: "Азимов Бобур",
-              car: "белый NEXIA 3",
-              licensePlate: "01 Q 363 KJ",
-              date: "18.01.2025, 14:30",
-              from: "Ташкент",
-              to: "Бекабад",
-              price: "340 000",
-            ),
-            OrderCard(
-              type: "ТАКСИ",
-              driver: "Азимов Бобур",
-              car: "белый NEXIA 3",
-              licensePlate: "01 Q 363 KJ",
-              date: "18.01.2025, 14:30",
-              from: "Ташкент",
-              to: "Бекабад",
-              price: "70 000",
-            ),
-            OrderCard(
-              type: "ПОЧТОВАЯ ПОСЫЛКА",
-              driver: "Азимов Бобур",
-              car: "белый NEXIA 3",
-              licensePlate: "01 Q 363 KJ",
-              date: "18.01.2025, 14:30",
-              from: "Ташкент",
-              to: "Бекабад",
-              price: "45 000",
-            ),
-            OrderCard(
-              type: "ГРУЗОПЕРЕВОЗКИ",
-              driver: "Азимов Бобур",
-              car: "белый NEXIA 3",
-              licensePlate: "01 Q 363 KJ",
-              date: "18.01.2025, 14:30",
-              from: "Ташкент",
-              to: "Бекабад",
-              price: "340 000",
-            ),
+
           ],
         ),
       ),
