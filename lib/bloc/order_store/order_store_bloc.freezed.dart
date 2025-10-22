@@ -21,7 +21,7 @@ mixin _$OrderStoreEvent {
   int get whereTosId => throw _privateConstructorUsedError;
   double get latitude => throw _privateConstructorUsedError;
   double get longitude => throw _privateConstructorUsedError;
-  String get where => throw _privateConstructorUsedError;
+  String? get where => throw _privateConstructorUsedError;
   String? get time => throw _privateConstructorUsedError;
   String? get day => throw _privateConstructorUsedError;
   int? get passengersCount => throw _privateConstructorUsedError;
@@ -42,7 +42,7 @@ mixin _$OrderStoreEvent {
       int whereTosId,
       double latitude,
       double longitude,
-      String where,
+      String? where,
       String? time,
       String? day,
       int? passengersCount,
@@ -66,7 +66,7 @@ mixin _$OrderStoreEvent {
       int whereTosId,
       double latitude,
       double longitude,
-      String where,
+      String? where,
       String? time,
       String? day,
       int? passengersCount,
@@ -90,7 +90,7 @@ mixin _$OrderStoreEvent {
       int whereTosId,
       double latitude,
       double longitude,
-      String where,
+      String? where,
       String? time,
       String? day,
       int? passengersCount,
@@ -141,7 +141,7 @@ abstract class $OrderStoreEventCopyWith<$Res> {
     int whereTosId,
     double latitude,
     double longitude,
-    String where,
+    String? where,
     String? time,
     String? day,
     int? passengersCount,
@@ -177,7 +177,7 @@ class _$OrderStoreEventCopyWithImpl<$Res, $Val extends OrderStoreEvent>
     Object? whereTosId = null,
     Object? latitude = null,
     Object? longitude = null,
-    Object? where = null,
+    Object? where = freezed,
     Object? time = freezed,
     Object? day = freezed,
     Object? passengersCount = freezed,
@@ -210,10 +210,10 @@ class _$OrderStoreEventCopyWithImpl<$Res, $Val extends OrderStoreEvent>
                 ? _value.longitude
                 : longitude // ignore: cast_nullable_to_non_nullable
                       as double,
-            where: null == where
+            where: freezed == where
                 ? _value.where
                 : where // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
             time: freezed == time
                 ? _value.time
                 : time // ignore: cast_nullable_to_non_nullable
@@ -286,7 +286,7 @@ abstract class _$$OrderImplCopyWith<$Res>
     int whereTosId,
     double latitude,
     double longitude,
-    String where,
+    String? where,
     String? time,
     String? day,
     int? passengersCount,
@@ -321,7 +321,7 @@ class __$$OrderImplCopyWithImpl<$Res>
     Object? whereTosId = null,
     Object? latitude = null,
     Object? longitude = null,
-    Object? where = null,
+    Object? where = freezed,
     Object? time = freezed,
     Object? day = freezed,
     Object? passengersCount = freezed,
@@ -354,10 +354,10 @@ class __$$OrderImplCopyWithImpl<$Res>
             ? _value.longitude
             : longitude // ignore: cast_nullable_to_non_nullable
                   as double,
-        where: null == where
+        where: freezed == where
             ? _value.where
             : where // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
         time: freezed == time
             ? _value.time
             : time // ignore: cast_nullable_to_non_nullable
@@ -423,7 +423,7 @@ class _$OrderImpl implements _Order {
     required this.whereTosId,
     required this.latitude,
     required this.longitude,
-    required this.where,
+    this.where,
     this.time,
     this.day,
     this.passengersCount,
@@ -448,7 +448,7 @@ class _$OrderImpl implements _Order {
   @override
   final double longitude;
   @override
-  final String where;
+  final String? where;
   @override
   final String? time;
   @override
@@ -557,7 +557,7 @@ class _$OrderImpl implements _Order {
       int whereTosId,
       double latitude,
       double longitude,
-      String where,
+      String? where,
       String? time,
       String? day,
       int? passengersCount,
@@ -604,7 +604,7 @@ class _$OrderImpl implements _Order {
       int whereTosId,
       double latitude,
       double longitude,
-      String where,
+      String? where,
       String? time,
       String? day,
       int? passengersCount,
@@ -651,7 +651,7 @@ class _$OrderImpl implements _Order {
       int whereTosId,
       double latitude,
       double longitude,
-      String where,
+      String? where,
       String? time,
       String? day,
       int? passengersCount,
@@ -729,7 +729,7 @@ abstract class _Order implements OrderStoreEvent {
     required final int whereTosId,
     required final double latitude,
     required final double longitude,
-    required final String where,
+    final String? where,
     final String? time,
     final String? day,
     final int? passengersCount,
@@ -754,7 +754,7 @@ abstract class _Order implements OrderStoreEvent {
   @override
   double get longitude;
   @override
-  String get where;
+  String? get where;
   @override
   String? get time;
   @override

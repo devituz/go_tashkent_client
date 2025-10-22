@@ -127,13 +127,15 @@ class OrderCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Text(
-                    price + " сум".tr(),
+                    (price == "0" ? "Kelishiladi" : "$price сум").tr(),
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
+
+
                 ),
               ],
             ),

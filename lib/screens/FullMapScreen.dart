@@ -175,7 +175,7 @@ class _GoState extends State<Go> with SingleTickerProviderStateMixin {
 
               child: FloatingActionButton(
                 onPressed: _myLoc,
-                backgroundColor: const Color(0xFF4A54E1),
+                backgroundColor: const Color(0xFFFF7625),
                 child: _isLocating
                     ? const CircularProgressIndicator(
                     color: Colors.white, strokeWidth: 2.5)
@@ -260,7 +260,7 @@ class _GoState extends State<Go> with SingleTickerProviderStateMixin {
                     ),
                   ),
                   child: const Text(
-                    "Buyurtma berish",
+                    "Keyingisi",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

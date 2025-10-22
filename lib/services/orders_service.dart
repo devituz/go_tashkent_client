@@ -44,7 +44,7 @@ class OrdersService {
     required int whereTosId,
     required double latitude,
     required double longitude,
-    required String where,
+    String? where,
     String? time,
     String? day,
     int? passengersCount,

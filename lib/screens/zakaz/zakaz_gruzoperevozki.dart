@@ -1,5 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:go_tashkent_client/bloc/order_store/order_store_bloc.dart';
+import 'package:go_tashkent_client/screens/FullMapScreen.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../widgets/zakaz taxi/time_picker.dart';
 import '../settings.dart';
@@ -12,19 +17,42 @@ class ZakazGruzoperevozki extends StatefulWidget {
 }
 
 class _ZakazGruzoperevozkiState extends State<ZakazGruzoperevozki> {
-  final List<String> cities = ["Ташкент", "Бекабад", "Ширин"];
-  final List<String> tashkentDestinations = ["Бекабад", "Ширин"];
+  final Map<String, int> cityIds = {
+    "Ташкент": 1,
+    "Бекабад": 2,
+    "Ширин": 3,
+  };
+
+  int totalPrice = 0;
+
+
+  final Map<String, int> tashkentDestinations = {
+    "Бекабад": 2,
+    "Ширин": 3,
+  };
+  DateTime? selectedTime;
+
   final List<String> dates = ["Сегодня", "Завтра"];
 
   String fromCity = "Ташкент";
   String toCity = "Бекабад";
   String selectedDate = "Сегодня";
+  LatLng? _currentLatLng; // nullable
 
-  TextEditingController _addressController = TextEditingController();
   TextEditingController _destinationController = TextEditingController();
   TextEditingController _receiverNameController = TextEditingController();
   TextEditingController _receiverPhoneController = TextEditingController();
   TextEditingController _commentController = TextEditingController();
+  final TextEditingController _pickupController = TextEditingController();
+
+  Future<LatLng> _getCurrentLocation() async {
+    await Geolocator.requestPermission();
+    Position pos = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+    return LatLng(pos.latitude, pos.longitude);
+  }
+
 
   void _updateFromCity(String? selectedCity) {
     if (selectedCity == null) return;
@@ -33,7 +61,7 @@ class _ZakazGruzoperevozkiState extends State<ZakazGruzoperevozki> {
       if (fromCity == "Бекабад" || fromCity == "Ширин") {
         toCity = "Ташкент";
       } else if (fromCity == "Ташкент") {
-        toCity = tashkentDestinations.first;
+        toCity = tashkentDestinations.keys.first;
       }
     });
   }
@@ -56,6 +84,17 @@ class _ZakazGruzoperevozkiState extends State<ZakazGruzoperevozki> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
+    final bool isTimeSelected = selectedTime != null;
+
+    final bool isReceiverNameController = _receiverNameController.text.isNotEmpty;
+    final bool isReceiverPhoneController = _receiverPhoneController.text.isNotEmpty;
+    final bool isPickupController = _pickupController.text.isNotEmpty;
+    final bool isDestinationFilled = _destinationController.text.isNotEmpty;
+
+
+    final bool canOrder = isTimeSelected && isDestinationFilled && isPickupController && isReceiverNameController &&isReceiverPhoneController;
+
     return Scaffold(
       backgroundColor: currentindex == 0 ? const Color(0xFFF2F4F5) : const Color(0xFF33263C),
       appBar: AppBar(
@@ -105,7 +144,7 @@ class _ZakazGruzoperevozkiState extends State<ZakazGruzoperevozki> {
                           child: _buildDropdownField(
                             label: "Откуда".tr(),
                             value: fromCity,
-                            availableCities: cities,
+                            availableCities: cityIds.keys.toList(),
                             onChanged: _updateFromCity,
                           ),
                         ),
@@ -117,7 +156,7 @@ class _ZakazGruzoperevozkiState extends State<ZakazGruzoperevozki> {
                               ? _buildDropdownField(
                                   label: "Куда".tr(),
                                   value: toCity,
-                                  availableCities: tashkentDestinations,
+                            availableCities: tashkentDestinations.keys.toList(),
                                   onChanged: _updateToCity,
                                 )
                               : _buildReadonlyDropdown(
@@ -129,11 +168,11 @@ class _ZakazGruzoperevozkiState extends State<ZakazGruzoperevozki> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  _buildInputField(
+                  _buildMapPickerField(
+                    context: context,
                     label: "Откуда забрать груз?".tr(),
-                    hint: "Выбрать на карте".tr(),
-                    controller: _addressController,
-                    icon: LucideIcons.mapPin,
+                    hint: _pickupController.text.isEmpty ? "Выбрать на карте".tr() : _pickupController.text,
+                    controller: _pickupController,
                   ),
                   const SizedBox(height: 16),
                   _buildInputField(
@@ -161,7 +200,14 @@ class _ZakazGruzoperevozkiState extends State<ZakazGruzoperevozki> {
                           label: "Время подачи машины".tr(),
                           hint: "",
                           icon: LucideIcons.clock,
+                          isTomorrow: selectedDate == "Завтра",
+                          onTimeSelected: (time) {
+                            setState(() {
+                              selectedTime = time;
+                            });
+                          },
                         ),
+
                       ),
                       const SizedBox(width: 15),
                       Expanded(
@@ -209,25 +255,77 @@ class _ZakazGruzoperevozkiState extends State<ZakazGruzoperevozki> {
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: SizedBox(
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF7625),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+              child: BlocConsumer<OrderStoreBloc, OrderStoreState>(
+                listener: (context, state) {
+                  state.maybeWhen(
+                    success: (result) {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/order_accept');
+                    },
+                    failure: (error) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Ошибка: ${error.message}')),
+                      );
+                    },
+                    orElse: () {},
+                  );
+                },
+                builder: (context, state) {
+                  final isLoading = state.maybeWhen(
+                      loading: () => true, orElse: () => false);
+                  return SizedBox(
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: isLoading || !canOrder
+                          ? null
+                          : () {
+                        final priceToSend = totalPrice;
+                        context.read<OrderStoreBloc>().add(
+                          OrderStoreEvent.order(
+                            fromWheresId: cityIds[fromCity]!,
+                            whereTosId: cityIds[toCity]!,
+                            latitude: _currentLatLng?.latitude ?? 41.2995,
+                            longitude: _currentLatLng?.longitude ?? 69.2401,
+                            receiverAddress: _destinationController.text,
+                            receiverName: _receiverNameController.text,
+                            receiverPhone: _receiverPhoneController.text,
+                            frontSeat: 0,
+                            bagaj: 0,
+                            time: "${selectedTime!.hour.toString().padLeft(2,'0')}:${selectedTime!.minute.toString().padLeft(2,'0')}",
+                            day: selectedDate,
+                            toDriverComment: _commentController.text,
+                            orderType: "freight_transport",
+                            priceType: "cash",
+                            price: priceToSend,
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFF7625),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: isLoading
+                          ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
+                          : Text(
+                        "Оформить".tr(),
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
-                  ),
-                  child: Text(
-                    "Оформить".tr(),
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+                  );
+                },
               ),
             ),
           ],
@@ -316,6 +414,45 @@ class _ZakazGruzoperevozkiState extends State<ZakazGruzoperevozki> {
       ],
     );
   }
+
+  Widget _buildMapPickerField({
+    required BuildContext context,
+    required String label,
+    required String hint,
+    required TextEditingController controller,
+  }) {
+    return GestureDetector(
+      onTap: () async {
+        // Hozirgi location olish
+        LatLng currentLatLng = await _getCurrentLocation();
+
+        // Go ekranini ochamiz va tanlangan manzilni kutamiz
+        final result = await Navigator.push<Map<String, dynamic>>(
+          context,
+          MaterialPageRoute(
+            builder: (_) => Go(initial: currentLatLng),
+          ),
+        );
+
+        // Tanlangan manzilni controller ga yozamiz
+        if (result != null) {
+          controller.text = result['address'] ?? '';
+          // kerak bo'lsa LatLng saqlash
+          _currentLatLng = result['latLng'];
+        }
+      },
+      child: AbsorbPointer(
+        // TextField faqat display uchun, yozib bo‘lmaydi
+        child: _buildInputField(
+          label: label,
+          hint: hint,
+          controller: controller,
+          icon: LucideIcons.mapPin,
+        ),
+      ),
+    );
+  }
+
 
   Widget _buildInputField({
     required String label,

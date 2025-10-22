@@ -4,9 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTheme {
 
   // Asosiy ranglar
-  static const Color primaryColor = Color(0xFF2F3291);
-  static const Color gradinet1 = Color(0xFF4A54E1);
-  static const Color gradinet2 = Color(0xFF2F3291);
+  static const Color primaryColor = Color(0xFFFF7625);
+  static const Color gradinet1 = Color(0xFFFF7625);
+  static const Color gradinet2 = Color(0xFFFF7625);
   static const Color gradinet3 = Color(0xFFFFFFFF);
 
   // static const Color primaryColor = Color(0xFF2F3291); // Jettaxi sariq rangi

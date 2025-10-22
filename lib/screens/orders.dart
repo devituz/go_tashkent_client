@@ -102,7 +102,7 @@ class _OrdersState extends State<Orders> {
                         case 'mail':
                           return 'Pochta';
                         case 'freight_transport':
-                          return 'Pochta jo‘natmasi';
+                          return 'Yuk tashish';
                         default:
                           return 'Noma’lum';
                       }
@@ -181,7 +181,7 @@ class _OrdersState extends State<Orders> {
                             case 'mail':
                               return 'Pochta';
                             case 'freight_transport':
-                              return 'Pochta jo‘natmasi';
+                              return 'Yuk tashish';
                             default:
                               return 'Noma’lum';
                           }

@@ -129,7 +129,7 @@ class _ZakazTaxiState extends State<ZakazTaxi> {
     }
 
     if (vipmesto) {
-      totalPrice += 10000 * numberOfPassengers;
+      totalPrice += 10000; // faqat 1 marta qo‘shiladi
     }
 
     totalPriceFormatted = NumberFormat("#,##0", "en_US")
@@ -426,8 +426,9 @@ class _ZakazTaxiState extends State<ZakazTaxi> {
                               time: "${selectedTime!.hour.toString().padLeft(2,'0')}:${selectedTime!.minute.toString().padLeft(2,'0')}",
                               passengersCount: numberOfPassengers,
                               frontSeat: vipmesto ? 1 : 0,
-                              day: selectedDate,
                               bagaj: isBagajnikRequired ? 1 : 0,
+                              day: selectedDate,
+
                               toDriverComment: _commentController.text,
                               orderType: "taxi",
                               priceType: "cash",
