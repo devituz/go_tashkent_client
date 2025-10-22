@@ -112,11 +112,11 @@ class _OrdersState extends State<Orders> {
                     String getLocationName(int? id) {
                       switch (id) {
                         case 1:
-                          return 'Bekobod';
-                        case 2:
-                          return 'Shirin';
-                        case 3:
                           return 'Toshkent';
+                        case 2:
+                          return 'Bekobod';
+                        case 3:
+                          return 'Shirin';
                         default:
                           return 'Noma’lum joy';
                       }
@@ -130,7 +130,7 @@ class _OrdersState extends State<Orders> {
                       date: order.createdAt ?? '',
                       from: getLocationName(order.fromWheresId),
                       to: getLocationName(order.whereTosId),
-                      price: "${order.totalPrice ?? 0}",
+                      price: "${order.price ?? 0}",
                     );
                   },
                 );
@@ -209,7 +209,7 @@ class _OrdersState extends State<Orders> {
                           date: order.createdAt ?? '',
                           from: getLocationName(order.fromWheresId),
                           to: getLocationName(order.whereTosId),
-                          price: "${order.totalPrice ?? 0}",
+                          price: "${order.price ?? 0}",
                         );
                       },
                     );

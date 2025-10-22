@@ -1,24 +1,27 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+
+import '../../screens/settings.dart';
+
 
 class TimePickerInput extends StatefulWidget {
   final String label;
   final String hint;
   final IconData icon;
-
-  /// Новый флаг: если true — без ограничений (весь день), иначе +15 минут от текущего времени
   final bool isTomorrow;
-
-  /// Необязательный фиксированный таймзон-оффсет в часах (например, Ташкент = +5)
   final int? fixedTzOffsetHours;
+  final Function(DateTime)? onTimeSelected;
+
   const TimePickerInput({
     super.key,
     required this.label,
     required this.hint,
     required this.icon,
     this.isTomorrow = false,
-    this.fixedTzOffsetHours = 5, // дефолт: Ташкент
+    this.fixedTzOffsetHours = 5,
+    this.onTimeSelected,
   });
 
   @override
@@ -36,24 +39,37 @@ class _TimePickerInputState extends State<TimePickerInput> {
       fixedTzOffsetHours: widget.fixedTzOffsetHours,
     );
     if (res != null) {
+      final now = widget.fixedTzOffsetHours != null
+          ? DateTime.now().toUtc().add(Duration(hours: widget.fixedTzOffsetHours!))
+          : DateTime.now().toLocal();
+      final selectedDateTime = DateTime(
+        now.year,
+        now.month,
+        widget.isTomorrow ? now.day + 1 : now.day,
+        res.hour,
+        res.minute,
+      );
       setState(() {
-        selectedTime = res.format(context);
+        selectedTime = "${res.hour.toString().padLeft(2, '0')}:${res.minute.toString().padLeft(2, '0')}";
         _controller.text = selectedTime;
       });
+      widget.onTimeSelected?.call(selectedDateTime);
     }
   }
 
   String _getCurrentTimeInGMTPlus5() {
     final base = widget.fixedTzOffsetHours != null
-        ? DateTime.now().toUtc().add(
-            Duration(hours: widget.fixedTzOffsetHours!),
-          )
+        ? DateTime.now().toUtc().add(Duration(hours: widget.fixedTzOffsetHours!))
         : DateTime.now().toLocal();
 
-    final currentTime = base.add(
-      const Duration(minutes: 30),
-    ); // просто placeholder-хинт
+    final currentTime = base.add(const Duration(minutes: 30));
     return '${currentTime.hour.toString().padLeft(2, '0')}:${currentTime.minute.toString().padLeft(2, '0')}';
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -65,7 +81,10 @@ class _TimePickerInputState extends State<TimePickerInput> {
           widget.label.tr(),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: TextStyle(fontSize: 14, color: Colors.black54),
+          style: TextStyle(
+            fontSize: 14,
+            color: currentindex == 0 ? Colors.black54 : Colors.white,
+          ),
         ),
         const SizedBox(height: 8),
         TextFormField(
@@ -73,9 +92,7 @@ class _TimePickerInputState extends State<TimePickerInput> {
           readOnly: true,
           onTap: () => _selectTime(context),
           decoration: InputDecoration(
-            hintText: selectedTime.isEmpty
-                ? _getCurrentTimeInGMTPlus5()
-                : selectedTime,
+            hintText: selectedTime.isEmpty ? "Времяни tanlang".tr() : selectedTime,
             filled: true,
             prefixIcon: Icon(widget.icon),
             fillColor: Colors.grey[200],
@@ -90,16 +107,14 @@ class _TimePickerInputState extends State<TimePickerInput> {
   }
 
   Future<TimeOfDay?> showCustomCupertinoTimePicker(
-    BuildContext context, {
-    required bool isTomorrow,
-    int? fixedTzOffsetHours,
-  }) async {
-    // База времени (локальная или фиксированный оффсет — напр. Ташкент +5)
+      BuildContext context, {
+        required bool isTomorrow,
+        int? fixedTzOffsetHours,
+      }) async {
     final DateTime nowBase = fixedTzOffsetHours != null
         ? DateTime.now().toUtc().add(Duration(hours: fixedTzOffsetHours))
         : DateTime.now().toLocal();
 
-    // Если завтра — без ограничений (00:00), иначе минимум = now + 15 мин
     final DateTime minDt = isTomorrow
         ? DateTime(nowBase.year, nowBase.month, nowBase.day, 0, 0)
         : nowBase.add(const Duration(minutes: 15));
@@ -108,8 +123,6 @@ class _TimePickerInputState extends State<TimePickerInput> {
     int minHour = isTomorrow ? 0 : (rollsToNextDay ? 23 : minDt.hour);
     int minMinute = isTomorrow ? 0 : (rollsToNextDay ? 59 : minDt.minute);
 
-    // Стартовая позиция пикера:
-    // завтра — поставим 09:00 (удобная дефолтная точка), сегодня — минимум
     int selectedHour = isTomorrow ? 9 : minHour;
     int selectedMinute = isTomorrow ? 0 : minMinute;
 
@@ -117,10 +130,9 @@ class _TimePickerInputState extends State<TimePickerInput> {
     final minuteCtrl = FixedExtentScrollController(initialItem: selectedMinute);
 
     TimeOfDay clampToMin(int h, int m) {
-      if (isTomorrow) return TimeOfDay(hour: h, minute: m); // нет ограничений
+      if (isTomorrow) return TimeOfDay(hour: h, minute: m);
       if (h < minHour) return TimeOfDay(hour: minHour, minute: minMinute);
-      if (h == minHour && m < minMinute)
-        return TimeOfDay(hour: h, minute: minMinute);
+      if (h == minHour && m < minMinute) return TimeOfDay(hour: h, minute: minMinute);
       return TimeOfDay(hour: h, minute: m);
     }
 
@@ -167,8 +179,7 @@ class _TimePickerInputState extends State<TimePickerInput> {
                 Padding(
                   padding: const EdgeInsets.only(top: 6),
                   child: Text(
-                    "Сегодня доступны только ближайшие минуты; выбор завтра недоступен."
-                        .tr(),
+                    "Сегодня доступны только ближайшие минуты; выбор завтра недоступен.".tr(),
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
@@ -191,8 +202,7 @@ class _TimePickerInputState extends State<TimePickerInput> {
                                 curve: Curves.easeOut,
                               );
                             }
-                            if (selectedHour == minHour &&
-                                selectedMinute < minMinute) {
+                            if (selectedHour == minHour && selectedMinute < minMinute) {
                               selectedMinute = minMinute;
                               minuteCtrl.animateToItem(
                                 minMinute,
@@ -234,8 +244,7 @@ class _TimePickerInputState extends State<TimePickerInput> {
                         children: List.generate(60, (m) {
                           final disabled =
                               !isTomorrow &&
-                              ((selectedHour < minHour) ||
-                                  (selectedHour == minHour && m < minMinute));
+                                  ((selectedHour < minHour) || (selectedHour == minHour && m < minMinute));
                           return Center(
                             child: Text(
                               m.toString().padLeft(2, '0'),

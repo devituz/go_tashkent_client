@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_tashkent_client/screens/zakaz/zakaz_taksi.dart';
 import 'package:go_tashkent_client/widgets/order_card_active.dart';
 import '../widgets/home/home_button.dart';
 import '../widgets/home/home_slider.dart';
@@ -74,8 +75,14 @@ class HomeScreen extends StatelessWidget {
               description: 'Закажите такси легко!\nВсего в пару кликов!',
               image: 'assets/images/Gentra 2.png',
               onTap: () {
-                Navigator.pushNamed(context, '/zakaz_taxi');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ZakazTaxi(), // sizning sahifa widgetingiz
+                  ),
+                );
               },
+
             ),
             HomeButton(
               category: 'ПОЧТОВАЯ ПОСЫЛКА',

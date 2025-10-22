@@ -5,6 +5,7 @@ import 'package:go_tashkent_client/bloc/delete/delete_bloc.dart';
 import 'package:go_tashkent_client/bloc/login/login_bloc.dart';
 import 'package:go_tashkent_client/bloc/news/news_bloc.dart';
 import 'package:go_tashkent_client/bloc/order_false/order_false_bloc.dart';
+import 'package:go_tashkent_client/bloc/order_store/order_store_bloc.dart';
 import 'package:go_tashkent_client/bloc/orders/orders_bloc.dart';
 import 'package:go_tashkent_client/bloc/otp/otp_bloc.dart';
 import 'package:go_tashkent_client/bloc/profile/profile_bloc.dart';
@@ -14,7 +15,6 @@ import 'package:go_tashkent_client/onboards/onboard_first.dart';
 import 'package:go_tashkent_client/onboards/onboard_thrid.dart';
 import 'package:go_tashkent_client/onboards/order_accept.dart';
 import 'package:go_tashkent_client/screens/about_app.dart';
-import 'package:go_tashkent_client/screens/company_about.dart';
 import 'package:go_tashkent_client/screens/nav_bar.dart';
 import 'package:go_tashkent_client/screens/place%20screens/clinics.dart';
 import 'package:go_tashkent_client/screens/place%20screens/edu.dart';
@@ -27,10 +27,8 @@ import 'package:go_tashkent_client/screens/zakaz/zakaz_pochta_krupniy.dart';
 import 'package:go_tashkent_client/screens/zakaz/zakaz_pochta_melkiy.dart';
 import 'package:go_tashkent_client/screens/zakaz/zakaz_taksi.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'bloc/addresses/addresses_bloc.dart';
 import 'generated/codegen_loader.g.dart';
-import 'screens/home_page.dart';
 import 'screens/settings.dart';
 import 'screens/splash_screen.dart';
 import 'screens/zakaz/zakaz_pustoy.dart';
@@ -66,6 +64,7 @@ Future<void> main() async {
             BlocProvider(create: (_) => AddressesBloc()),
             BlocProvider(create: (_) => OrdersBloc()),
             BlocProvider(create: (_) => OrderFalseBloc()),
+            BlocProvider(create: (_) => OrderStoreBloc()),
           ],
           child: const MyApp(),
         )
