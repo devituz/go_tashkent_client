@@ -1,16 +1,30 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_tashkent_client/bloc/photos/photos_bloc.dart';
+import 'package:go_tashkent_client/widgets/home/Slider.dart';
 import 'package:go_tashkent_client/widgets/home/place_slider.dart';
 
 import '../widgets/place_category.dart';
 import 'settings.dart';
 
-class Place extends StatelessWidget {
+class Place extends StatefulWidget {
   const Place({super.key});
 
   @override
+  State<Place> createState() => _PlaceState();
+}
+
+class _PlaceState extends State<Place> {
+
+  @override
+  void initState() {
+    context.read<PhotosBloc>().add(const PhotosEvent.photo(photoType: 'photo2'),);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor:
           currentindex == 0 ? const Color(0xFFF2F4F5) : const Color(0xFF33263C),
@@ -45,7 +59,7 @@ class Place extends StatelessWidget {
             SizedBox(
               height: 16,
             ),
-            PlaceSlider(),
+            SliderWidgtes(),
             SizedBox(
               height: 10,
             ),

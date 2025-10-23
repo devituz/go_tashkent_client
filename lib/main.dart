@@ -8,6 +8,7 @@ import 'package:go_tashkent_client/bloc/order_false/order_false_bloc.dart';
 import 'package:go_tashkent_client/bloc/order_store/order_store_bloc.dart';
 import 'package:go_tashkent_client/bloc/orders/orders_bloc.dart';
 import 'package:go_tashkent_client/bloc/otp/otp_bloc.dart';
+import 'package:go_tashkent_client/bloc/photos/photos_bloc.dart';
 import 'package:go_tashkent_client/bloc/profile/profile_bloc.dart';
 import 'package:go_tashkent_client/bloc/register/register_bloc.dart';
 import 'package:go_tashkent_client/onboards/onboard.second.dart';
@@ -65,6 +66,7 @@ Future<void> main() async {
             BlocProvider(create: (_) => OrdersBloc()),
             BlocProvider(create: (_) => OrderFalseBloc()),
             BlocProvider(create: (_) => OrderStoreBloc()),
+            BlocProvider(create: (_) => PhotosBloc()),
           ],
           child: const MyApp(),
         )

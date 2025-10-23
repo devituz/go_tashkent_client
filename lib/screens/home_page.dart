@@ -1,15 +1,37 @@
+import 'dart:math';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_tashkent_client/bloc/orders/orders_bloc.dart';
 import 'package:go_tashkent_client/screens/zakaz/zakaz_taksi.dart';
+import 'package:go_tashkent_client/widgets/home/Slider.dart';
 import 'package:go_tashkent_client/widgets/order_card_active.dart';
+import '../bloc/photos/photos_bloc.dart';
 import '../widgets/home/home_button.dart';
-import '../widgets/home/home_slider.dart';
 import '../widgets/order_card.dart';
 import 'settings.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+
+
+  @override
+  void initState() {
+    context.read<OrdersBloc>().add(const OrdersEvent.orders(active: true),);
+    context.read<PhotosBloc>().add(const PhotosEvent.photo(photoType: 'photo1'),);
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,30 +69,96 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 16),
-            const HomeSlider(),
+            const SliderWidgtes(),
             const SizedBox(height: 16),
 
-            // DRIVER QIDIRSH PAYTIDA
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 16),
-            //   child: OrderCardActive(),
-            // ),
-
             // DRIVER TANLAGANDAN SO'NG
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 16),
-            //   child: OrderCard(
-            //     type: "ТАКСИ",
-            //     driver: "Азимов Бобур",
-            //     car: "белый NEXIA 3",
-            //     licensePlate: "01 Q 363 KJ",
-            //     date: "18.01.2025, 14:30",
-            //     from: "Ташкент",
-            //     to: "Бекабад",
-            //     price: "70 000",
-            //   ),
-            // ),
-            HomeButton(
+        BlocBuilder<OrdersBloc, OrdersState>(
+          builder: (context, state) {
+            return state.when(
+              initial: () => const SizedBox.shrink(),
+              loading: () => const SizedBox.shrink(),
+              failure: (error) => const SizedBox.shrink(),
+              success: (orders) {
+                final data = orders.data ?? [];
+                if (data.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+
+                final allWaiting = data.every((order) =>
+                (order.driverName == null || order.driverName!.trim().isEmpty)
+                );
+
+                if (allWaiting) {
+                  return const Center(
+                    child:  Padding(
+                      padding:  EdgeInsets.symmetric(horizontal: 16),
+                      child: OrderCardActive(),
+                    ),
+                  );
+                }
+
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    final order = data[index];
+
+                    String getReadableType(String? type) {
+                      switch (type) {
+                        case 'taxi':
+                          return 'TAXI';
+                        case 'mail':
+                          return 'Pochta';
+                        case 'freight_transport':
+                          return 'Yuk tashish';
+                        default:
+                          return 'Noma’lum';
+                      }
+                    }
+
+                    String getLocationName(int? id) {
+                      switch (id) {
+                        case 1:
+                          return 'Toshkent';
+                        case 2:
+                          return 'Bekobod';
+                        case 3:
+                          return 'Shirin';
+                        default:
+                          return 'Noma’lum joy';
+                      }
+                    }
+
+                    final hasDriver = (order.driverName ?? '').trim().isNotEmpty;
+                    final hasCarName = (order.carName ?? '').trim().isNotEmpty;
+                    final hasCarNumber = (order.carNumber ?? '').trim().isNotEmpty;
+
+                    if (!hasDriver || !hasCarName || !hasCarNumber) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: OrderCard(
+                        type: getReadableType(order.orderType),
+                        driver: order.driverName!,
+                        car: order.carName!,
+                        licensePlate: order.carNumber!,
+                        date: order.createdAt ?? '',
+                        from: getLocationName(order.fromWheresId),
+                        to: getLocationName(order.whereTosId),
+                        price: "${order.price ?? 0}",
+                      ),
+                    );
+                  },
+                );
+              },
+            );
+          },
+        ),
+        HomeButton(
               category: 'ТАКСИ',
               description: 'Закажите такси легко!\nВсего в пару кликов!',
               image: 'assets/images/Gentra 2.png',
@@ -78,7 +166,7 @@ class HomeScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ZakazTaxi(), // sizning sahifa widgetingiz
+                    builder: (context) => ZakazTaxi(),
                   ),
                 );
               },
