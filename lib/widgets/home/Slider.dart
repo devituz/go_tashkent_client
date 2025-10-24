@@ -5,11 +5,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 
 import '../../bloc/photos/photos_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SliderWidgtes extends StatelessWidget {
   const SliderWidgtes({
     Key? key,
   }) : super(key: key);
+
+  void _launchURL(String? url) async {
+    if (url == null || url.isEmpty) return;
+    final uri = Uri.tryParse(url);
+    if (uri != null && await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -32,17 +42,20 @@ class SliderWidgtes extends StatelessWidget {
                   autoPlayInterval: 6000,
                   isLoop: true,
                   children: images.map((imgUrl) {
-                    return Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      width: size.width,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child:
-                        CachedNetworkImage(
-                          imageUrl:  imgUrl.image,
-                          fit: BoxFit.cover,
-                          errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
+                    return GestureDetector(
+                      onTap: () => _launchURL(imgUrl.link),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        width: size.width,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child:
+                          CachedNetworkImage(
+                            imageUrl:  imgUrl.image,
+                            fit: BoxFit.cover,
+                            errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                          ),
                         ),
                       ),
                     );

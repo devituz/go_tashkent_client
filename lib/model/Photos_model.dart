@@ -36,19 +36,23 @@ class PhotosModel {
 class Datum {
   final int id;
   final String image;
+  final String? link; // link null bo‘lishi mumkin
 
   Datum({
     required this.id,
     required this.image,
+    this.link,
   });
 
   Datum copyWith({
     int? id,
     String? image,
+    String? link,
   }) =>
       Datum(
         id: id ?? this.id,
         image: image ?? this.image,
+        link: link ?? this.link,
       );
 
   factory Datum.fromRawJson(String str) => Datum.fromJson(json.decode(str));
@@ -58,10 +62,13 @@ class Datum {
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
     id: json["id"],
     image: json["image"],
+    link: json["link"], // link maydonini parse qilamiz
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
     "image": image,
+    "link": link,
   };
 }
+
