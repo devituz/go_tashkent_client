@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_tashkent_client/screens/login/page/login.dart';
 import 'package:go_tashkent_client/services/token_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart';
 
 class GlobalService {
@@ -86,6 +87,8 @@ class GlobalService {
               return ApiException(data['message'] ?? 'Iltimos, 1 minut kuting.');
             }
 
+
+
             if (data['status'] == 'notfound_user') {
               return ApiException(
                 data['message'] ?? 'Bunday foydalanuvchi yo‘q',
@@ -99,6 +102,7 @@ class GlobalService {
                 status: 'sms_code_error',
               );
             }
+
             if (data['status'] == 'only_one_restaurant') {
               return ApiException(
                 data['message'] ?? "Siz faqat bitta restoran mahsulotlarini basketga qo‘sha olasiz. Savatni tozalashni xohlaysizmi",
@@ -110,6 +114,13 @@ class GlobalService {
               return ApiException(
                 data['message'] ?? 'SMS kodi muddati tugagan',
                 status: 'code_expired',
+              );
+            }
+
+            if (data['status'] == 'cencel_error') {
+              return ApiException(
+                data['message'] ?? 'xato',
+                status: 'cencel_error',
               );
             }
 
@@ -141,6 +152,16 @@ class ApiException implements Exception {
 
 
 Future<void> globalLogout() async {
+  final prefs = await SharedPreferences.getInstance();
+  final auth = prefs.getBool('auth') ?? true;
+
+  // 🔹 Agar foydalanuvchi mehmon bo‘lsa, tokenni o‘chirmasdan chiqamiz
+  if (auth == false) {
+    debugPrint('⚠️ Mehmon foydalanuvchi, logout qilinmadi.');
+    return;
+  }
+
+  // 🔹 Aks holda — tokenni tozalaymiz va login sahifasiga qaytamiz
   await TokenStorage.removeToken();
 
   navigatorKey.currentState?.pushAndRemoveUntil(
@@ -148,7 +169,7 @@ Future<void> globalLogout() async {
         (route) => false,
   );
 
-
+  debugPrint('✅ Logout muvaffaqiyatli bajarildi.');
 }
 
 String get currentLang {

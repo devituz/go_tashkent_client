@@ -29,13 +29,13 @@ class OrderFalseBloc extends Bloc<OrderFalseEvent, OrderFalseState> {
       );
 
       emit(OrderFalseState.success(result));
-      print("✅ Orders yuklandi: ${result.toJson()}");
+      // print("✅ Orders yuklandi: ${result.toJson()}");
     } catch (e) {
       if (e is ApiException) {
-        print("❌ API xato: $e");
+        // print("❌ API xato: $e");
         emit(OrderFalseState.failure(e));
       } else {
-        print("❌ Noma’lum xato: $e");
+        // print("❌ Noma’lum xato: $e");
         emit(OrderFalseState.failure(ApiException(e.toString())));
       }
     }

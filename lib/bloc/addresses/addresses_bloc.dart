@@ -29,13 +29,13 @@ class AddressesBloc extends Bloc<AddressesEvent, AddressesState> {
       );
 
       emit(AddressesState.success(result));
-      print("✅ Manzillar yuklandi: ${result.toJson()}");
+      // print("✅ Manzillar yuklandi: ${result.toJson()}");
     } catch (e) {
       if (e is ApiException) {
-        print("❌ API xato: $e");
+        // print("❌ API xato: $e");
         emit(AddressesState.failure(e));
       } else {
-        print("❌ Noma’lum xato: $e");
+        // print("❌ Noma’lum xato: $e");
         emit(AddressesState.failure(ApiException(e.toString())));
       }
     }

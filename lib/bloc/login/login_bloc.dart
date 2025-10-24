@@ -33,11 +33,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(LoginState.success(result));
     } catch (e) {
       if (e is ApiException) {
-        print(e);
+        // print(e);
         emit(LoginState.failure(e));
       } else {
         emit(LoginState.failure(ApiException(e.toString())));
-        print(e);
+        // print(e);
       }
     }
   }

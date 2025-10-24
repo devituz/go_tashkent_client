@@ -29,13 +29,13 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       );
 
       emit(OrdersState.success(result));
-      print("✅ Orders yuklandi: ${result.toJson()}");
+      // print("✅ Orders yuklandi: ${result.toJson()}");
     } catch (e) {
       if (e is ApiException) {
-        print("❌ API xato: $e");
+        // print("❌ API xato: $e");
         emit(OrdersState.failure(e));
       } else {
-        print("❌ Noma’lum xato: $e");
+        // print("❌ Noma’lum xato: $e");
         emit(OrdersState.failure(ApiException(e.toString())));
       }
     }

@@ -26,13 +26,13 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
           lang: currentLang
       );
       emit(NewsState.success(result));
-      print(result.toJson());
+      // print(result.toJson());
     } catch (e) {
       if (e is ApiException) {
-        print(e);
+        // print(e);
         emit(NewsState.failure(e));
       } else {
-        print(e);
+        // print(e);
 
         emit(NewsState.failure(ApiException(e.toString())));
       }

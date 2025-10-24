@@ -23,17 +23,23 @@ class OrderCencelBloc extends Bloc<OrderCencelEvent, OrderCencelState> {
     emit(const OrderCencelState.loading());
 
     try {
-      await _ordersService.cancelOrder(
+      // ✅ cancelOrder() endi String message qaytaradi
+      final message = await _ordersService.cancelOrder(
         orderId: event.orderId,
         lang: currentLang,
       );
 
-      emit(const OrderCencelState.success());
+      emit(OrderCencelState.success(message));
+      // print("ok ${message}");
     } catch (e) {
       if (e is ApiException) {
+
         emit(OrderCencelState.failure(e));
+        // print("xatolik $e");
       } else {
         emit(OrderCencelState.failure(ApiException(e.toString())));
+        // print("xatolik2 $e");
+
       }
     }
   }

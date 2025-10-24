@@ -4,9 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_tashkent_client/bloc/login/login_bloc.dart';
 import 'package:go_tashkent_client/onboards/onboard_thrid.dart';
+import 'package:go_tashkent_client/screens/nav_bar.dart';
 import 'package:go_tashkent_client/screens/otp/page/otp.dart';
 import 'package:go_tashkent_client/screens/register/page/Register.dart';
 import 'package:go_tashkent_client/widgets/custom_snackbar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -26,6 +28,24 @@ class _LoginPageState extends State<LoginPage> {
         scrolledUnderElevation: 0,
         elevation: 0,
         backgroundColor: Colors.white,
+        actions: [
+          TextButton(
+            onPressed: () async  {
+              final prefs = await   SharedPreferences.getInstance();
+
+              await prefs.setBool('auth', false);
+              Navigator.pushNamed(context, '/');
+            },
+            child: Text(
+              'Next'.tr(),
+              style: const TextStyle(
+                color: Color(0xFFFF7625),
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ],
       ),
 
       // 🔥 BlocConsumer bilan o‘ralgan UI
@@ -138,12 +158,16 @@ class _LoginPageState extends State<LoginPage> {
           return GestureDetector(
             onTap: isLoading
                 ? null
-                : () {
+                : () async {
               final phone = phoneController.text.replaceAll('-', '');
               if (phone.isEmpty || phone.length < 9) {
                 CustomSnackBar.showError(context, 'Введите номер телефона'.tr());
                 return;
               }
+              final prefs = await   SharedPreferences.getInstance();
+
+              // 🔹 auth qiymatini false qilib saqlash
+              await prefs.setBool('auth', true);
               context.read<LoginBloc>().add(LoginEvent.started(phone: phone));
             },
             child: Container(

@@ -26,13 +26,13 @@ class PhotosBloc extends Bloc<PhotosEvent, PhotosState> {
           lang: currentLang
       );
       emit(PhotosState.success(result));
-      print(result.toJson());
+      // print(result.toJson());
     } catch (e) {
       if (e is ApiException) {
-        print(e);
+        // print(e);
         emit(PhotosState.failure(e));
       } else {
-        print(e);
+        // print(e);
 
         emit(PhotosState.failure(ApiException(e.toString())));
       }

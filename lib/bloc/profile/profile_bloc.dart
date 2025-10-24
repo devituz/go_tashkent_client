@@ -34,7 +34,7 @@ import 'package:go_tashkent_client/services/global_service.dart';
           print(e);
           emit(ProfileState.failure(e));
         } else {
-          print(e);
+          // print(e);
 
           emit(ProfileState.failure(ApiException(e.toString())));
         }

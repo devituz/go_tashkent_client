@@ -43,17 +43,16 @@ class OrderStoreBloc extends Bloc<OrderStoreEvent, OrderStoreState> {
       );
 
       emit(OrderStoreState.success(result));
-      print("object");
+      // print("object");
     } catch (e) {
-      print("🟧 Unexpected error: ${e.toString()}");
+      // print("🟧 Unexpected error: ${e.toString()}");
 
       if (e is ApiException) {
-        print("🟥 ApiException message: ${e.message}");
+        // print("🟥 ApiException message: ${e.message}");
         emit(OrderStoreState.failure(e));
       } else {
-        print("🟧 Unexpected error: ${e.toString()}");
+        globalLogout();
 
-        emit(OrderStoreState.failure(ApiException(e.toString())));
       }
     }
   }

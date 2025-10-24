@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../const/app_theme.dart';
 
@@ -245,7 +246,11 @@ class _GoState extends State<Go> with SingleTickerProviderStateMixin {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    final prefs = await   SharedPreferences.getInstance();
+
+                    // 🔹 auth qiymatini false qilib saqlash
+                    await prefs.setBool('auth', true);
                     Navigator.pop(context, {
                       'latLng': _selected,
                       'address': _address,

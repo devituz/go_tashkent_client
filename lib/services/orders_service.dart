@@ -37,7 +37,7 @@ class OrdersService {
     }
   }
 
-  Future<void> cancelOrder({
+  Future<String> cancelOrder({
     required int orderId,
     String lang = 'ru',
   }) async {
@@ -45,19 +45,22 @@ class OrdersService {
       final payloadHelper = PayloadHelper();
       final payload = payloadHelper.createPayload();
 
-      final response = await _globalService.dio.post(
+      final response = await _globalService.dio.get(
         'mobile-client/order/$orderId/cancel',
         queryParameters: {'lang': lang, ...payload},
       );
 
       final data = _globalService.handleResponse(response);
-      print("✅ Buyurtma bekor qilindi: $data");
-
+      print(data);
+      // Backend javobi: {"message": "..."}
+      final message = data['message'] ?? 'Buyurtma bekor qilindi';
+      return message;
     } on DioException catch (e) {
-      print("❌ Xato (cancelOrder): $e");
+      print(e);
       throw _globalService.handleDioError(e);
     }
   }
+
 
 
 
