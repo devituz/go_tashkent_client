@@ -123,6 +123,8 @@ class _OrdersState extends State<Orders> {
                     }
 
                     return OrderCard(
+                      cancel: true,
+                      id: order.id ?? 0,
                       type: getReadableType(order.orderType),
                       driver: order.driverName ?? 'Noma’lum',
                       car: order.carName ?? '',
@@ -202,6 +204,8 @@ class _OrdersState extends State<Orders> {
                         }
 
                         return OrderCard(
+                          cancel: false,
+                          id: order.id ?? 0,
                           type: getReadableType(order.orderType),
                           driver: order.driverName ?? 'Noma’lum',
                           car: order.carName ?? '',

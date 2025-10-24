@@ -38,7 +38,7 @@ class _ZakazPochtaMelkiyState extends State<ZakazPochtaMelkiy> {
   String toCity = "Бекабад";
   String selectedDate = "Сегодня";
   bool isBagajnikRequired = false;
-  LatLng? _currentLatLng; // nullable
+  LatLng? _currentLatLng;
 
   TextEditingController _destinationController = TextEditingController();
   TextEditingController _receiverNameController = TextEditingController();
@@ -54,8 +54,6 @@ class _ZakazPochtaMelkiyState extends State<ZakazPochtaMelkiy> {
     );
     return LatLng(pos.latitude, pos.longitude);
   }
-
-
 
 
   void _updateFromCity(String? selectedCity) {

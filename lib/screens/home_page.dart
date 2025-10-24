@@ -142,6 +142,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       child: OrderCard(
+                        cancel: true,
+                        id: order.id ?? 0,
                         type: getReadableType(order.orderType),
                         driver: order.driverName!,
                         car: order.carName!,

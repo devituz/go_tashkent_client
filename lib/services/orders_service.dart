@@ -37,6 +37,29 @@ class OrdersService {
     }
   }
 
+  Future<void> cancelOrder({
+    required int orderId,
+    String lang = 'ru',
+  }) async {
+    try {
+      final payloadHelper = PayloadHelper();
+      final payload = payloadHelper.createPayload();
+
+      final response = await _globalService.dio.post(
+        'mobile-client/order/$orderId/cancel',
+        queryParameters: {'lang': lang, ...payload},
+      );
+
+      final data = _globalService.handleResponse(response);
+      print("✅ Buyurtma bekor qilindi: $data");
+
+    } on DioException catch (e) {
+      print("❌ Xato (cancelOrder): $e");
+      throw _globalService.handleDioError(e);
+    }
+  }
+
+
 
 
   Future<Map<String, dynamic>> orderStore({
@@ -98,14 +121,11 @@ class OrdersService {
       print("✅ Buyurtma yaratildi: $data");
       return _globalService.handleResponse(response);
     } on DioException catch (e) {
-      // DioException ichidagi response.data ni tekshirib, print qilamiz
       if (e.response != null) {
         print("❌ Xato (createOrder) response.data: ${e.response!.data}");
       } else {
         print("❌ Xato (createOrder) message: ${e.message}");
       }
-
-      // Keyin throw qilamiz: Exception bilan o'rab yuboramiz
       throw Exception(e.response?.data ?? e.message);
     }
   }

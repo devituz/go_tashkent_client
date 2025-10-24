@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../screens/settings.dart';
 
 class OrderCard extends StatelessWidget {
+  final int id;
   final String type;
   final String driver;
   final String car;
@@ -12,8 +13,10 @@ class OrderCard extends StatelessWidget {
   final String from;
   final String to;
   final String price;
+  final bool cancel;
 
   const OrderCard({
+    required this.id,
     required this.type,
     required this.driver,
     required this.car,
@@ -22,6 +25,7 @@ class OrderCard extends StatelessWidget {
     required this.from,
     required this.to,
     required this.price,
+    this.cancel = true,
     super.key,
   });
 
@@ -137,6 +141,46 @@ class OrderCard extends StatelessWidget {
 
 
                 ),
+                const SizedBox(height: 10),
+                if  (cancel)
+                TextButton.icon(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        title: const Text("Buyurtmani bekor qilmoqchimisiz?"),
+                        content: const Text(
+                            "Bekor qilish tugmasini bosganingizdan so‘ng buyurtma bekor qilinadi."),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text("Yo‘q"),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFFF7625),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Ha, bekor qilaman"),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.cancel, color: Colors.redAccent, size: 18),
+                  label: const Text(
+                    "Bekor qilish",
+                    style: TextStyle(color: Colors.redAccent, fontSize: 12),
+                  ),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                  ),
+                ),
               ],
             ),
           ],
@@ -145,3 +189,5 @@ class OrderCard extends StatelessWidget {
     );
   }
 }
+
+
