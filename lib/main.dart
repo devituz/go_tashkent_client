@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_tashkent_client/bloc/delete/delete_bloc.dart';
 import 'package:go_tashkent_client/bloc/login/login_bloc.dart';
 import 'package:go_tashkent_client/bloc/news/news_bloc.dart';
+import 'package:go_tashkent_client/bloc/order_cencel/order_cencel_bloc.dart';
 import 'package:go_tashkent_client/bloc/order_false/order_false_bloc.dart';
 import 'package:go_tashkent_client/bloc/order_store/order_store_bloc.dart';
 import 'package:go_tashkent_client/bloc/orders/orders_bloc.dart';
@@ -67,6 +68,7 @@ Future<void> main() async {
             BlocProvider(create: (_) => OrderFalseBloc()),
             BlocProvider(create: (_) => OrderStoreBloc()),
             BlocProvider(create: (_) => PhotosBloc()),
+            BlocProvider(create: (_) => OrderCencelBloc()),
           ],
           child: const MyApp(),
         )
@@ -76,8 +78,6 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     final routes = {
@@ -88,7 +88,6 @@ class MyApp extends StatelessWidget {
       '/hotels': (context) => const Hotels(),
       '/edu': (context) => const EduPage(),
       '/about_app': (context) => const AboutApp(),
-      // '/about_company': (context) => const AboutCompany(),
       '/user_data': (context) => const UserData(),
       '/zakaz_taxi': (context) => const ZakazTaxi(),
       '/zakaz_pochta_melkiy': (context) => const ZakazPochtaMelkiy(),
@@ -100,8 +99,6 @@ class MyApp extends StatelessWidget {
       '/onboard_thrid': (context) => const OnboardThrid(),
       '/order_accept': (context) => const OrderAccept(),
       '/current_pochta': (context) => const CurrentPochta(),
-
-      // '/about_app': (context) => const AboutApp(),
     };
     return MaterialApp(
       navigatorKey: navigatorKey,

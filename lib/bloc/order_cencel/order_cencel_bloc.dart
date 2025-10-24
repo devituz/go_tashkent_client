@@ -13,11 +13,11 @@ class OrderCencelBloc extends Bloc<OrderCencelEvent, OrderCencelState> {
   OrderCencelBloc({OrdersService? orderService})
       : _ordersService = orderService ?? OrdersService(),
         super(const OrderCencelState.initial()) {
-    on<_CancelOrder>(_onCancelOrder);
+    on<_Cancel>(_onCancelOrder);
   }
 
   Future<void> _onCancelOrder(
-      _CancelOrder event,
+      _Cancel event,
       Emitter<OrderCencelState> emit,
       ) async {
     emit(const OrderCencelState.loading());
