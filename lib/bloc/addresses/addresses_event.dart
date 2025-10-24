@@ -4,6 +4,7 @@ part of 'addresses_bloc.dart';
 class AddressesEvent with _$AddressesEvent {
   const factory AddressesEvent.addresses({
     int? categoryId,
+    String? search,
   }) = _Addresses;
 
 }

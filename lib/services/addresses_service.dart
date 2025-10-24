@@ -16,6 +16,8 @@ class AddressesService {
   Future<AddressModel> getAddresses({
     String lang = 'ru',
     int? categoryId,
+    String? search,
+
   }) async {
     try {
       final payloadHelper = PayloadHelper();
@@ -26,6 +28,8 @@ class AddressesService {
         queryParameters: {
           'lang': lang,
           if (categoryId != null) 'category_id': categoryId,
+          if (search != null && search.isNotEmpty) 'search': search,
+          ...payload,
           ...payload,
         },
       );

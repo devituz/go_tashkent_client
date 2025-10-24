@@ -87,6 +87,10 @@ class GlobalService {
               return ApiException(data['message'] ?? 'Iltimos, 1 minut kuting.');
             }
 
+            if (data['status'] == 'search_error') {
+              return ApiException(data['message'] ?? 'Natija topilmadi.');
+            }
+
 
 
             if (data['status'] == 'notfound_user') {

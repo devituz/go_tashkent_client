@@ -18,17 +18,18 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$AddressesEvent {
   int? get categoryId => throw _privateConstructorUsedError;
+  String? get search => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int? categoryId) addresses,
+    required TResult Function(int? categoryId, String? search) addresses,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int? categoryId)? addresses,
+    TResult? Function(int? categoryId, String? search)? addresses,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int? categoryId)? addresses,
+    TResult Function(int? categoryId, String? search)? addresses,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -59,7 +60,7 @@ abstract class $AddressesEventCopyWith<$Res> {
     $Res Function(AddressesEvent) then,
   ) = _$AddressesEventCopyWithImpl<$Res, AddressesEvent>;
   @useResult
-  $Res call({int? categoryId});
+  $Res call({int? categoryId, String? search});
 }
 
 /// @nodoc
@@ -76,13 +77,17 @@ class _$AddressesEventCopyWithImpl<$Res, $Val extends AddressesEvent>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? categoryId = freezed}) {
+  $Res call({Object? categoryId = freezed, Object? search = freezed}) {
     return _then(
       _value.copyWith(
             categoryId: freezed == categoryId
                 ? _value.categoryId
                 : categoryId // ignore: cast_nullable_to_non_nullable
                       as int?,
+            search: freezed == search
+                ? _value.search
+                : search // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -98,7 +103,7 @@ abstract class _$$AddressesImplCopyWith<$Res>
   ) = __$$AddressesImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int? categoryId});
+  $Res call({int? categoryId, String? search});
 }
 
 /// @nodoc
@@ -114,13 +119,17 @@ class __$$AddressesImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? categoryId = freezed}) {
+  $Res call({Object? categoryId = freezed, Object? search = freezed}) {
     return _then(
       _$AddressesImpl(
         categoryId: freezed == categoryId
             ? _value.categoryId
             : categoryId // ignore: cast_nullable_to_non_nullable
                   as int?,
+        search: freezed == search
+            ? _value.search
+            : search // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -129,14 +138,16 @@ class __$$AddressesImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$AddressesImpl implements _Addresses {
-  const _$AddressesImpl({this.categoryId});
+  const _$AddressesImpl({this.categoryId, this.search});
 
   @override
   final int? categoryId;
+  @override
+  final String? search;
 
   @override
   String toString() {
-    return 'AddressesEvent.addresses(categoryId: $categoryId)';
+    return 'AddressesEvent.addresses(categoryId: $categoryId, search: $search)';
   }
 
   @override
@@ -145,11 +156,12 @@ class _$AddressesImpl implements _Addresses {
         (other.runtimeType == runtimeType &&
             other is _$AddressesImpl &&
             (identical(other.categoryId, categoryId) ||
-                other.categoryId == categoryId));
+                other.categoryId == categoryId) &&
+            (identical(other.search, search) || other.search == search));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, categoryId);
+  int get hashCode => Object.hash(runtimeType, categoryId, search);
 
   /// Create a copy of AddressesEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -162,27 +174,27 @@ class _$AddressesImpl implements _Addresses {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(int? categoryId) addresses,
+    required TResult Function(int? categoryId, String? search) addresses,
   }) {
-    return addresses(categoryId);
+    return addresses(categoryId, search);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(int? categoryId)? addresses,
+    TResult? Function(int? categoryId, String? search)? addresses,
   }) {
-    return addresses?.call(categoryId);
+    return addresses?.call(categoryId, search);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(int? categoryId)? addresses,
+    TResult Function(int? categoryId, String? search)? addresses,
     required TResult orElse(),
   }) {
     if (addresses != null) {
-      return addresses(categoryId);
+      return addresses(categoryId, search);
     }
     return orElse();
   }
@@ -217,10 +229,13 @@ class _$AddressesImpl implements _Addresses {
 }
 
 abstract class _Addresses implements AddressesEvent {
-  const factory _Addresses({final int? categoryId}) = _$AddressesImpl;
+  const factory _Addresses({final int? categoryId, final String? search}) =
+      _$AddressesImpl;
 
   @override
   int? get categoryId;
+  @override
+  String? get search;
 
   /// Create a copy of AddressesEvent
   /// with the given fields replaced by the non-null parameter values.

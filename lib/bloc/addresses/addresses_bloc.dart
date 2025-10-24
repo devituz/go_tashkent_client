@@ -26,6 +26,8 @@ class AddressesBloc extends Bloc<AddressesEvent, AddressesState> {
       final result = await _addressesService.getAddresses(
         lang: currentLang,
         categoryId: event.categoryId,
+        search: event.search,
+
       );
 
       emit(AddressesState.success(result));

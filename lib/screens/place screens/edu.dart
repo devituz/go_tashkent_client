@@ -1,53 +1,95 @@
+import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_tashkent_client/bloc/addresses/addresses_bloc.dart';
 
-import '../../widgets/card_company.dart';
 import '../../widgets/top_card.dart';
 import '../company_about.dart';
 import '../settings.dart';
 
 class EduPage extends StatefulWidget {
-  const EduPage({
-    Key? key,
-  }) : super(key: key);
+  const EduPage({Key? key}) : super(key: key);
 
   @override
   State<EduPage> createState() => _EduPageState();
 }
 
 class _EduPageState extends State<EduPage> {
+  final TextEditingController _searchController = TextEditingController();
+  Timer? _debounce;
+  bool _isSearching = false;
 
   @override
   void initState() {
     super.initState();
+    _fetchAddresses();
+
+    // Search listener
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    _debounce?.cancel();
+    super.dispose();
+  }
+
+  void _fetchAddresses({String? search}) {
     context.read<AddressesBloc>().add(
       AddressesEvent.addresses(
         categoryId: 4,
+        search: search,
       ),
     );
+  }
+
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      final query = _searchController.text.trim();
+      _fetchAddresses(search: query.isEmpty ? null : query);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor:
-          currentindex == 0 ? const Color(0xFFF2F4F5) : const Color(0xFF33263C),
+      currentindex == 0 ? const Color(0xFFF2F4F5) : const Color(0xFF33263C),
       appBar: AppBar(
         backgroundColor:
-            currentindex == 0 ? Colors.white : const Color(0xFF43324D),
+        currentindex == 0 ? Colors.white : const Color(0xFF43324D),
+        elevation: 0,
+        scrolledUnderElevation: 0,
         flexibleSpace: Container(
           decoration: const BoxDecoration(
               border: Border(
                   bottom: BorderSide(
-            width: 0.3,
-            color: Colors.black38,
-          ))),
+                    width: 0.3,
+                    color: Colors.black38,
+                  ))),
         ),
-        title: Text(
+        title: _isSearching
+            ? TextField(
+          controller: _searchController,
+          autofocus: true,
+          style: TextStyle(
+              color: currentindex == 0 ? Colors.black : Colors.white),
+          decoration: InputDecoration(
+            hintText: "Qidiruv...".tr(),
+            hintStyle: TextStyle(
+                color:
+                currentindex == 0 ? Colors.black38 : Colors.white54),
+            border: InputBorder.none,
+          ),
+        )
+            : Text(
           "Университеты и институты".tr(),
           style: TextStyle(
             fontSize: 18,
@@ -55,74 +97,69 @@ class _EduPageState extends State<EduPage> {
             color: currentindex == 0 ? Colors.black : Colors.white,
           ),
         ),
-        elevation: 0,
-        scrolledUnderElevation: 0,
         leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
           icon: Icon(
-            Icons.arrow_back_rounded,
+            _isSearching ? Icons.close : Icons.arrow_back_rounded,
             color: currentindex == 0 ? Colors.black : Colors.white,
           ),
+          onPressed: () {
+            if (_isSearching) {
+              _searchController.clear();
+              setState(() => _isSearching = false);
+            } else {
+              Navigator.pop(context);
+            }
+          },
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  CupertinoIcons.search,
-                  color: currentindex == 0 ? Colors.black : Colors.white,
-                )),
-          )
+          if (!_isSearching)
+            IconButton(
+              icon: Icon(
+                CupertinoIcons.search,
+                color: currentindex == 0 ? Colors.black : Colors.white,
+              ),
+              onPressed: () {
+                setState(() => _isSearching = true);
+              },
+            )
         ],
       ),
       body: BlocBuilder<AddressesBloc, AddressesState>(
         builder: (context, state) {
           return state.when(
-              initial: () => const Center(child: Text("⏳ Yuklanmoqda...")),
-              loading: () => Center(
-                child: const CupertinoActivityIndicator(
-                  radius: 14,
+            initial: () => const Center(child: Text("⏳ Yuklanmoqda...")),
+            loading: () =>
+            const Center(child: CupertinoActivityIndicator(radius: 14)),
+            failure: (error) => Center(child: Text("${error.message}")),
+            success: (data) {
+              final addresses = data.data ?? [];
+
+
+              return SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  children: addresses.map((item) {
+                    return TopCard(
+                      name: item.name ?? "",
+                      about: item.desc ?? "",
+                      latitude: item.latitude ?? "",
+                      longitude: item.longitude ?? "",
+                      top_obloshka: item.topObloshka ?? "",
+                      logo: item.logo ?? "",
+                      adres: item.address ?? "",
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AboutCompany(item: item),
+                          ),
+                        );
+                      },
+                    );
+                  }).toList(),
                 ),
-              ),
-
-              success: (data) {
-                final addresses = data.data ?? [];
-
-                if (addresses.isEmpty) {
-                  return const Center(child: Text("Hech narsa topilmadi"));
-                }
-
-                return SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Column(
-                    children: addresses.map((item) {
-                      return TopCard(
-                        name: item.name ?? "",
-                        about: item.desc ?? "",
-                        latitude: item.latitude ?? "",
-                        longitude:item.longitude ?? "",
-                        top_obloshka: item.topObloshka ?? "",
-                        logo: item.logo ?? "",
-                        adres: item.address ?? "",
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AboutCompany(item: item),
-                            ),
-                          );
-                        },
-                      );
-                    }).toList(),
-                  ),
-                );
-              },
-
-              /// ❌ Xatolik holati
-              failure: (error) => SizedBox.shrink()
+              );
+            },
           );
         },
       ),
